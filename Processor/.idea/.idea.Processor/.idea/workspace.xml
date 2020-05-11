@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="bea3ae49-3399-420e-8abf-97d667754fc8" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/../../../Program Files/Unity/2019.3.13f1/Editor/Data/Resources/PackageManager/BuiltInPackages/com.unity.ugui/Runtime/UI/Core/Button.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/48050808-8AEE-40CA-B708-18FF164A29D5/4d/a57c38c9/Object.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Unity/Scripts/MonoProcessor.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Unity/Scripts/MonoSource.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Unity/Scripts/MonoTicker.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/48050808-8AEE-40CA-B708-18FF164A29D5/b7/707995ca/MonoBehaviour.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/437BA245-D840-4784-B9FB-AB9B439AC908/c1/31dbeb08/List`1.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Unity/Scripts/GameManager.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Unity/Scripts/MonoGraph.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Unity/Scripts/IMonoNode.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/SupplyChain/Source.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/48050808-8AEE-40CA-B708-18FF164A29D5/e0/9be8d13b/InvokableCall.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/SupplyChain/Ticker.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/30C44715-2599-4106-AB1E-5D6BB9A98850/05/c85361d2/Physics2D.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/SupplyChain/Shape.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/SupplyChain/Graph.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/48050808-8AEE-40CA-B708-18FF164A29D5/65/d69c0c20/Object.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/SupplyChain/Processor.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/2DB13BA0-D523-4322-8AA9-892C408FB49A/5e/f250f78b/Input.cs" root0="SKIP_HIGHLIGHTING" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/Assets/GameManager.cs" />
+        <option value="$PROJECT_DIR$/Assets/Source.cs" />
+        <option value="$PROJECT_DIR$/Assets/Unity/Scripts/Source.cs" />
+        <option value="$PROJECT_DIR$/Assets/Unity/Scripts/MonoTicker.cs" />
+        <option value="$PROJECT_DIR$/Assets/SupplyChain/Ticker.cs" />
+        <option value="$PROJECT_DIR$/Assets/SupplyChain/Grid.cs" />
+        <option value="$PROJECT_DIR$/Assets/SupplyChain/Shape.cs" />
+        <option value="$PROJECT_DIR$/Assets/Unity/Scripts/IMonoNode.cs" />
+        <option value="$PROJECT_DIR$/Assets/Unity/Scripts/MonoSource.cs" />
+        <option value="$PROJECT_DIR$/Assets/Unity/Scripts/MonoProcessor.cs" />
+        <option value="$PROJECT_DIR$/Assets/Unity/Scripts/GameManager.cs" />
+        <option value="$PROJECT_DIR$/Assets/Unity/Scripts/MonoGraph.cs" />
+        <option value="$PROJECT_DIR$/Assets/SupplyChain/Processor.cs" />
+        <option value="$PROJECT_DIR$/Assets/SupplyChain/Source.cs" />
+        <option value="$PROJECT_DIR$/Assets/SupplyChain/Graph.cs" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectId" id="1bh6U9pbWHf25SCf0biKNo2DngC" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="DebuggerViewTab_PTCS_FirstProportionKey" value="0.350269" />
+    <property name="DebuggerViewTab_PTCS_LastProportionKey" value="0.30005977" />
+    <property name="Discover.Launch.Via.Unity" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="XThreadsFramesViewSplitterKey" value="0.35686275" />
+    <property name="settings.editor.selected.configurable" value="preferences.build.unityPlugin" />
+  </component>
+  <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor &amp; Play">
+    <configuration name="Attach to Unity Editor &amp; Play" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="UNITY_ATTACH_AND_PLAY" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
+      <option name="allowRunningInParallel" value="false" />
+      <option name="listenPortForConnections" value="false" />
+      <option name="pid" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
+      <option name="allowRunningInParallel" value="false" />
+      <option name="listenPortForConnections" value="false" />
+      <option name="pid" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="2" />
+  </component>
+  <component name="UnityProjectConfiguration" hasMinimizedUI="true" />
+  <component name="UnityUnitTestConfiguration" currentTestLauncher="EditMode" />
+  <component name="VcsManagerConfiguration">
+    <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state width="1704" height="218" key="GridCell.Tab.0.bottom" timestamp="1589166162098">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state width="1704" height="218" key="GridCell.Tab.0.bottom/0.0.2560.1400@0.0.2560.1400" timestamp="1589166162098" />
+    <state width="1704" height="218" key="GridCell.Tab.0.center" timestamp="1589166162098">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state width="1704" height="218" key="GridCell.Tab.0.center/0.0.2560.1400@0.0.2560.1400" timestamp="1589166162098" />
+    <state width="1704" height="218" key="GridCell.Tab.0.left" timestamp="1589166162098">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state width="1704" height="218" key="GridCell.Tab.0.left/0.0.2560.1400@0.0.2560.1400" timestamp="1589166162098" />
+    <state width="1704" height="218" key="GridCell.Tab.0.right" timestamp="1589166162098">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state width="1704" height="218" key="GridCell.Tab.0.right/0.0.2560.1400@0.0.2560.1400" timestamp="1589166162098" />
+    <state width="1704" height="218" key="GridCell.Tab.1.bottom" timestamp="1589166162098">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state width="1704" height="218" key="GridCell.Tab.1.bottom/0.0.2560.1400@0.0.2560.1400" timestamp="1589166162098" />
+    <state width="1704" height="218" key="GridCell.Tab.1.center" timestamp="1589166162098">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state width="1704" height="218" key="GridCell.Tab.1.center/0.0.2560.1400@0.0.2560.1400" timestamp="1589166162098" />
+    <state width="1704" height="218" key="GridCell.Tab.1.left" timestamp="1589166162098">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state width="1704" height="218" key="GridCell.Tab.1.left/0.0.2560.1400@0.0.2560.1400" timestamp="1589166162098" />
+    <state width="1704" height="218" key="GridCell.Tab.1.right" timestamp="1589166162098">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state width="1704" height="218" key="GridCell.Tab.1.right/0.0.2560.1400@0.0.2560.1400" timestamp="1589166162098" />
+    <state width="1704" height="218" key="GridCell.Tab.2.bottom" timestamp="1589166162098">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state width="1704" height="218" key="GridCell.Tab.2.bottom/0.0.2560.1400@0.0.2560.1400" timestamp="1589166162098" />
+    <state width="1704" height="218" key="GridCell.Tab.2.center" timestamp="1589166162098">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state width="1704" height="218" key="GridCell.Tab.2.center/0.0.2560.1400@0.0.2560.1400" timestamp="1589166162098" />
+    <state width="1704" height="218" key="GridCell.Tab.2.left" timestamp="1589166162098">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state width="1704" height="218" key="GridCell.Tab.2.left/0.0.2560.1400@0.0.2560.1400" timestamp="1589166162098" />
+    <state width="1704" height="218" key="GridCell.Tab.2.right" timestamp="1589166162098">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state width="1704" height="218" key="GridCell.Tab.2.right/0.0.2560.1400@0.0.2560.1400" timestamp="1589166162098" />
+    <state width="1704" height="218" key="GridCell.Tab.3.bottom" timestamp="1589166162098">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state width="1704" height="218" key="GridCell.Tab.3.bottom/0.0.2560.1400@0.0.2560.1400" timestamp="1589166162098" />
+    <state width="1704" height="218" key="GridCell.Tab.3.center" timestamp="1589166162098">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state width="1704" height="218" key="GridCell.Tab.3.center/0.0.2560.1400@0.0.2560.1400" timestamp="1589166162098" />
+    <state width="1704" height="218" key="GridCell.Tab.3.left" timestamp="1589166162098">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state width="1704" height="218" key="GridCell.Tab.3.left/0.0.2560.1400@0.0.2560.1400" timestamp="1589166162098" />
+    <state width="1704" height="218" key="GridCell.Tab.3.right" timestamp="1589166162098">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state width="1704" height="218" key="GridCell.Tab.3.right/0.0.2560.1400@0.0.2560.1400" timestamp="1589166162098" />
+    <state x="1477" y="414" key="RiderGenerateDialog" timestamp="1589163655935">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="1477" y="414" key="RiderGenerateDialog/0.0.2560.1400@0.0.2560.1400" timestamp="1589163655935" />
+    <state x="743" y="389" key="SettingsEditor" timestamp="1589135573425">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="743" y="389" key="SettingsEditor/0.0.2560.1400@0.0.2560.1400" timestamp="1589135573425" />
+    <state x="634" y="410" width="672" height="678" key="search.everywhere.popup" timestamp="1589167146773">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="634" y="410" width="672" height="678" key="search.everywhere.popup/0.0.2560.1400@0.0.2560.1400" timestamp="1589167146773" />
+  </component>
+</project>
