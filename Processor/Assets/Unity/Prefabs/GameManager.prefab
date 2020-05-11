@@ -10,7 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2115779969402537582}
   - component: {fileID: 2115779969402537583}
-  - component: {fileID: 4035967726527600425}
+  - component: {fileID: 8887860496529877163}
+  - component: {fileID: 121932480548013842}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -47,12 +48,24 @@ MonoBehaviour:
   plus: {fileID: 3562303550346004668, guid: fba0a2d2b0cc63a4ca8fcb57e9af121d, type: 3}
   cam: {fileID: 0}
   gridSize: 0.5
-  lineTemplate: {fileID: 2224996393721274230, guid: f1559985d91728e449a42e74b4f1d90c,
+  connectorPrefab: {fileID: 2224996393721274231, guid: f1559985d91728e449a42e74b4f1d90c,
     type: 3}
   currentLine: {fileID: 0}
   buttonPlus: {fileID: 0}
   buttonLine: {fileID: 0}
---- !u!114 &4035967726527600425
+--- !u!114 &8887860496529877163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2115779969402537580}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b8b875186f340abab048eb23a77bdc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &121932480548013842
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

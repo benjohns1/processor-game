@@ -1,34 +1,45 @@
 ﻿using System;
+using System.Collections.Generic;
+using SupplyChain.Graph;
 
 namespace SupplyChain
 {
-    public interface IProcessor : INode
+    public interface IProcessor : INode, IBuffer
     {
+        Filter Filter { get; }
     }
     
     [Serializable]
     public class Processor : IProcessor
     {
-        public Shape inShape;
-        public Shape outShape;
+        public Filter inFilter;
         private Ticker ticker;
         private Node node;
+        private readonly Buffer buffer = new Buffer();
 
-        public Processor(Shape inShape, Shape outShape, Ticker ticker)
+        public Processor(Filter filter, Ticker ticker)
         {
-            this.inShape = inShape;
-            this.outShape = outShape;
+            inFilter = filter;
             this.ticker = ticker;
             node = new Node(1, 1);
         }
 
-        public Guid Id => node.Id;
-        public bool IsEntry => node.IsEntry;
-        public bool AddUpstream(IConnector connector) => node.AddUpstream(connector);
-        public bool AddDownstream(IConnector connector) => node.AddDownstream(connector);
-        public bool RemoveUpstream(IConnector connector) => node.RemoveUpstream(connector);
-        public bool RemoveDownstream(IConnector connector) => node.RemoveDownstream(connector);
+        Guid INode.Id => node.Id;
+        bool INode.IsEntry => node.IsEntry;
+        bool INode.IsFinal => node.IsFinal;
+        bool INode.AddUpstream(IConnector connector) => node.AddUpstream(connector);
+        bool INode.AddDownstream(IConnector connector) => node.AddDownstream(connector);
+        bool INode.RemoveUpstream(IConnector connector) => node.RemoveUpstream(connector);
+        bool INode.RemoveDownstream(IConnector connector) => node.RemoveDownstream(connector);
 
-        public override string ToString() => $"{base.ToString()}:{node}";
+        event EventHandler<Buffer.UpdatedArgs> IBuffer.Updated
+        {
+            add => buffer.Updated += value;
+            remove => buffer.Updated -= value;
+        }
+
+        int IBuffer.Add(Packet packet) => buffer.Add(packet);
+        public IEnumerable<Packet> Remove(Filter filter, int amount) => buffer.Remove(filter, amount);
+        public Filter Filter => inFilter;
     }
 }

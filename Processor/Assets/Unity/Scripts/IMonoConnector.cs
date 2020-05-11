@@ -2,8 +2,8 @@
 
 namespace Unity.Scripts
 {
-    public interface IMonoNode
+    public interface IMonoConnector
     {
-        INode GetNode();
+        IConnector GetConnector();
     }
 }

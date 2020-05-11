@@ -1,21 +1,27 @@
 ﻿using SupplyChain;
+using SupplyChain.Graph;
 using UnityEngine;
 
 namespace Unity.Scripts
 {
     public class MonoProcessor : MonoBehaviour, IMonoNode
     {
-        [SerializeField] private GameObject icon;
+        [SerializeField] private bool allShapes;
+        [SerializeField] private Shape[] shapes;
      
         private MonoTicker monoTicker;   
         private IProcessor processor;
-        private Ticker ticker;
 
         private void Awake()
         {
-            monoTicker = FindObjectOfType<MonoTicker>();
-            ticker = monoTicker.GetComponent<MonoTicker>().ticker;
-            processor = new Processor(Shape.Triangle, Shape.Square, ticker);
+            var ticker = FindObjectOfType<MonoTicker>().ticker;
+            var filter = new Filter(allShapes, shapes);
+            processor = new Processor(filter, ticker);
+            processor.Updated += (sender, args) =>
+            {
+                Debug.Log(args.Buffer);
+                // TODO: update text
+            };
         }
 
         public INode GetNode()

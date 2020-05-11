@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using SupplyChain;
+using SupplyChain.Graph;
 using UnityEngine;
 
 namespace Unity.Scripts
@@ -11,11 +12,6 @@ namespace Unity.Scripts
             return Mathf.RoundToInt(distance * 1000f);
         }
         
-        public static float ConnectorLengthToDistance(int length)
-        {
-            return length / 1000f;
-        }
-        
         public static void CreateNode(MonoGraph g, GameObject prefab, Vector3 pos)
         {
             // Display in game
@@ -24,48 +20,45 @@ namespace Unity.Scripts
             // Add node to graph
             if (!(go.GetComponent(typeof(IMonoNode)) is IMonoNode mNode))
             {
+                Destroy(go);
                 return;
             }
-            g.AddNode(mNode);
+
+            if (!g.AddNode(mNode))
+            {
+                Destroy(go);
+            }
         }
 
         public struct DrawConnector
         {
-            public LineRenderer Prefab;
+            public GameObject Prefab;
             public IMonoNode Upstream;
             public Vector3 Start;
             public IMonoNode Downstream;
             public Vector3 End;
         }
 
-        public static void CreateConnector(MonoGraph g, DrawConnector drawConnector)
+        public static void CreateTransportConnector(MonoGraph g, DrawConnector drawConnector)
         {
-            var dist = Vector3.Distance(drawConnector.Start, drawConnector.End);
-            var length = DistanceToConnectorLength(dist);
-            
-            // Create connector
-            var c = new Connector(drawConnector.Upstream?.GetNode(), drawConnector.Downstream?.GetNode(), length);
-            
             // Display in game
-            var lr = Instantiate(drawConnector.Prefab, Vector3.zero, Quaternion.identity);
-            lr.enabled = false;
-            lr.positionCount = 2;
-            lr.SetPosition(0, drawConnector.Start);
-            lr.SetPosition(1, drawConnector.End);
-            
-            // Add connector to graph
-            if (!g.AddConnector(lr, c))
+            var go = Instantiate(drawConnector.Prefab, Vector3.zero, Quaternion.identity);
+            var monoTransporter = go.GetComponent<MonoTransporter>();
+            if (monoTransporter == null || !monoTransporter.Init(drawConnector.Upstream, drawConnector.Start, drawConnector.Downstream, drawConnector.End))
             {
-                Destroy(lr);
+                Destroy(go);
                 return;
             }
             
-            lr.enabled = true;
+            // Add connector to graph
+            if (!g.AddConnector(monoTransporter))
+            {
+                Destroy(go);
+                return;
+            }
         }
         
-        private Graph graph = new Graph();
-        
-        private List<LineRenderer> lines = new List<LineRenderer>();
+        private NodeGraph nodeGraph = new NodeGraph();
         
         private void Start()
         {
@@ -73,25 +66,25 @@ namespace Unity.Scripts
             for (var i = sources.Length - 1; i >= 0; i--)
             {
                 var node = sources[i].GetNode();
-                graph.AddNode(node);
+                nodeGraph.AddNode(node);
             }
         }
 
-        public Graph GetGraph()
+        public NodeGraph GetGraph()
         {
-            return graph;
+            return nodeGraph;
         }
 
-        private void AddNode(IMonoNode mNode)
+        private bool AddNode(IMonoNode mNode)
         {
             var n = mNode.GetNode();
-            graph.AddNode(n);
+            return nodeGraph.AddNode(n);
         }
 
-        private bool AddConnector(LineRenderer l, IConnector connector)
+        private bool AddConnector(IMonoConnector mConnector)
         {
-            lines.Add(l);
-            return graph.AddConnector(connector);
+            var c = mConnector.GetConnector();
+            return nodeGraph.AddConnector(c);
         }
     }
 }

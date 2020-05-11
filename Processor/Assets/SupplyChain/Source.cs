@@ -1,24 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using SupplyChain.Graph;
 
 namespace SupplyChain
 {
     [Serializable]
-    public class Source : INode
+    public class Source : INode, IBuffer
     {
-        public event EventHandler<BufferUpdatedArgs> BufferUpdated;
-
-        public class BufferUpdatedArgs : EventArgs
-        {
-            public readonly int Buffer;
-            public readonly int ChangedAmount;
-
-            public BufferUpdatedArgs(int buffer, int changedAmount)
-            {
-                Buffer = buffer;
-                ChangedAmount = changedAmount;
-            }
-        }
-
         [Serializable]
         public class Rate
         {
@@ -49,7 +37,7 @@ namespace SupplyChain
         
         public Shape shape;
         public Rate rate;
-        private int buffer = 0;
+        private readonly Buffer buffer = new Buffer();
         private Ticker ticker;
         private Node node;
 
@@ -73,22 +61,25 @@ namespace SupplyChain
                  return;
              }
 
-             buffer += add;
-             OnBufferUpdated(new BufferUpdatedArgs(buffer, add));
+             buffer.Add(new Packet(shape, add));
         }
-
-        protected virtual void OnBufferUpdated(BufferUpdatedArgs e)
-        {
-            BufferUpdated?.Invoke(this, e);
-        }
-
-        public Guid Id => node.Id;
-        public bool IsEntry => node.IsEntry;
-        public bool AddUpstream(IConnector connector) => node.AddUpstream(connector);
-        public bool AddDownstream(IConnector connector) => node.AddDownstream(connector);
-        public bool RemoveUpstream(IConnector connector) => node.RemoveUpstream(connector);
-        public bool RemoveDownstream(IConnector connector) => node.RemoveDownstream(connector);
         
         public override string ToString() => $"{base.ToString()}:{node}";
+
+        Guid INode.Id => node.Id;
+        bool INode.IsEntry => node.IsEntry;
+        bool INode.IsFinal => node.IsFinal;
+        bool INode.AddUpstream(IConnector connector) => node.AddUpstream(connector);
+        bool INode.AddDownstream(IConnector connector) => node.AddDownstream(connector);
+        bool INode.RemoveUpstream(IConnector connector) => node.RemoveUpstream(connector);
+        bool INode.RemoveDownstream(IConnector connector) => node.RemoveDownstream(connector);
+
+        public event EventHandler<Buffer.UpdatedArgs> Updated
+        {
+            add => buffer.Updated += value;
+            remove => buffer.Updated -= value;
+        }
+        int IBuffer.Add(Packet packet) => buffer.Add(packet);
+        IEnumerable<Packet> IBuffer.Remove(Filter filter, int amount) => buffer.Remove(filter, amount);
     }
 }

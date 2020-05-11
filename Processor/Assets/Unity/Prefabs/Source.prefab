@@ -295,10 +295,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc87b7837dd87ff4f9581885006147d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  monoTicker: {fileID: 0}
   text: {fileID: 7867005546114208930}
-  icon: {fileID: 3568382623661817349}
-  shapeIcon: {fileID: 2315121682803971994}
+  shape: 0
 --- !u!1 &7867005546114208930
 GameObject:
   m_ObjectHideFlags: 0
@@ -333,7 +331,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0.47}
+  m_AnchoredPosition: {x: 0, y: 0.855}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!23 &1432888924976541048
@@ -390,10 +388,10 @@ TextMesh:
   m_Anchor: 4
   m_Alignment: 1
   m_TabSize: 4
-  m_FontSize: 16
+  m_FontSize: 24
   m_FontStyle: 0
   m_RichText: 1
   m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
   m_Color:
     serializedVersion: 2
-    rgba: 4290199761
+    rgba: 4294967295

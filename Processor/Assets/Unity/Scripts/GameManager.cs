@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using SupplyChain;
+using SupplyChain.Graph;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -18,8 +17,8 @@ namespace Unity.Scripts
     {
         [SerializeField] private GameObject plus;
         [SerializeField] private Camera cam;
-        [SerializeField] private float gridSize = 0.5f;
-        [SerializeField] private LineRenderer connectorPrefab;
+        [SerializeField] private float gridSize = 1f;
+        [SerializeField] private GameObject connectorPrefab;
         [SerializeField] private LineRenderer currentLine;
         [SerializeField] private Button buttonPlus;
         [SerializeField] private Button buttonLine;
@@ -33,7 +32,7 @@ namespace Unity.Scripts
         private float currentLineZ = -1;
         private float placeZ = 0;
 
-        private Graph graph;
+        private NodeGraph nodeGraph;
         private MonoGraph mGraph;
 
         private void Awake()
@@ -44,7 +43,7 @@ namespace Unity.Scripts
             es = EventSystem.current;
 
             mGraph = GetComponent<MonoGraph>();
-            graph = mGraph.GetGraph();
+            nodeGraph = mGraph.GetGraph();
         }
 
         private float OnGrid(float x)
@@ -164,7 +163,7 @@ namespace Unity.Scripts
                 return;
             }
 
-            MonoGraph.CreateConnector(mGraph, new MonoGraph.DrawConnector{
+            MonoGraph.CreateTransportConnector(mGraph, new MonoGraph.DrawConnector{
                 Prefab = connectorPrefab,
                 Start = OnGrid(currentLineStart.transform.position, lineZ),
                 Upstream = currentLineStart.GetComponentInParent(typeof(IMonoNode)) as IMonoNode,

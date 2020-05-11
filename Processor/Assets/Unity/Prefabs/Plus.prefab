@@ -44,8 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e4e0eb788e64c9cb4098cc806c460f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  monoTicker: {fileID: 0}
-  icon: {fileID: 4432698372698489950}
+  allShapes: 1
+  shapes: 
 --- !u!1 &4432698372698489950
 GameObject:
   m_ObjectHideFlags: 0
