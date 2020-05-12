@@ -19,6 +19,11 @@ namespace SupplyChain
             return new Packet(Shape, amount);
         }
 
+        public Packet NewShape(Shape shape)
+        {
+            return new Packet(shape, Amount);
+        }
+
         public override string ToString()
         {
             return $"{Amount} {Shape}";
@@ -29,15 +34,17 @@ namespace SupplyChain
     public struct Filter
     {
         private bool allowAll;
-        private Shape[] shapes;
+        private Shape[] includeShapes;
+        private Shape[] excludeShapes;
 
-        public Filter(bool allowAll, Shape[] shapes)
+        public Filter(bool allowAll, Shape[] includeShapes, Shape[] excludeShapes)
         {
             this.allowAll = allowAll;
-            this.shapes = shapes;
+            this.includeShapes = includeShapes;
+            this.excludeShapes = excludeShapes;
         }
 
-        public static Filter All()
+        public static Filter AllowAll()
         {
             return new Filter
             {
@@ -45,11 +52,20 @@ namespace SupplyChain
             };
         }
 
-        public static Filter Shapes(params Shape[] shapes)
+        public static Filter AllowShapes(params Shape[] shapes)
         {
             return new Filter
             {
-                shapes = shapes,
+                includeShapes = shapes,
+            };
+        }
+
+        public static Filter ExcludeShapes(params Shape[] shapes)
+        {
+            return new Filter
+            {
+                allowAll = true,
+                excludeShapes = shapes,
             };
         }
 
@@ -57,15 +73,20 @@ namespace SupplyChain
         {
             if (allowAll)
             {
-                return true;
+                if (excludeShapes.Length == 0)
+                {
+                    return true;   
+                }
+
+                return excludeShapes.All(pShape => pShape != shape);
             }
 
-            if (shapes.Length == 0)
+            if (includeShapes.Length == 0)
             {
                 return false;
             }
 
-            return shapes.Any(pShape => pShape == shape);
+            return includeShapes.Any(pShape => pShape == shape);
         }
     }
     

@@ -8,6 +8,11 @@ namespace Unity.Scripts
     {
         [SerializeField] private GameObject text;
         [SerializeField] private Shape shape;
+        [SerializeField] private int packetAmount = 1;
+        [SerializeField] private int tickRate = 1;
+        [SerializeField] private int maxDownstream = 1;
+
+
      
         private Source source;
         private TextMesh textMesh;
@@ -20,7 +25,7 @@ namespace Unity.Scripts
             textMesh = text.GetComponent<TextMesh>();
             textMesh.text = "";
             
-            source = new Source(shape, new Source.Rate(2, 1), ticker);
+            source = new Source(shape, new Rate(packetAmount, tickRate), ticker, maxDownstream);
             source.Updated += (sender, args) =>
             {
                 textMesh.text = $"{args.Buffer}";
@@ -30,6 +35,10 @@ namespace Unity.Scripts
         public INode GetNode()
         {
             return source;
+        }
+        public bool Init(NodeGraph g)
+        {
+            return g.AddNode(source);
         }
     }
 }

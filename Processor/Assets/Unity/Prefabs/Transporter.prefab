@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2224996393721274230}
   - component: {fileID: 4685286178904521779}
   m_Layer: 0
-  m_Name: LineRenderer
+  m_Name: Transporter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -139,4 +139,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d779cdbe835b4aae9c00314ca1d6e6b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  text: {fileID: 0}
+  rate: 1
+  speed: 1000

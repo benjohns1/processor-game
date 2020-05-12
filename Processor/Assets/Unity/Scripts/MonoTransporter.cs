@@ -19,19 +19,22 @@ namespace Unity.Scripts
             lr = GetComponent<LineRenderer>();
         }
 
-        public bool Init(IMonoNode upstream, Vector3 start, IMonoNode downstream, Vector3 end)
+        public bool Init(NodeGraph g, IMonoNode upstream, Vector3 start, IMonoNode downstream, Vector3 end)
         {
+            // Create transport connector
+            var connector = new Connector(upstream.GetNode(), downstream.GetNode());
+            if (!g.AddConnector(connector))
+            {
+                return false;
+            }
+            var length = MonoGraph.DistanceToConnectorLength(Vector3.Distance(start, end));
+            transporter = new Transporter(connector, ticker, length, rate, speed);
+            
             // Display line
             lr.enabled = false;
             lr.positionCount = 2;
             lr.SetPosition(0, start);
             lr.SetPosition(1, end);
-            
-            // Create transport connector
-            var connector = new Connector(upstream.GetNode(), downstream.GetNode());
-            var length = MonoGraph.DistanceToConnectorLength(Vector3.Distance(start, end));
-            transporter = new Transporter(connector, ticker, length, rate, speed);
-            
             lr.enabled = true;
             
             return true;

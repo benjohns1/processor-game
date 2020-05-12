@@ -16,7 +16,7 @@ namespace SupplyChain.Graph
         public Connector(INode upstream, INode downstream)
         {
             Upstream = upstream ?? throw new Exception("upstream cannot be null");
-            Downstream = downstream ?? throw new Exception("downstream cannot be null");;
+            Downstream = downstream ?? throw new Exception("downstream cannot be null");
         }
 
         public override string ToString()

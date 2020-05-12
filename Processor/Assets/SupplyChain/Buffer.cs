@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SupplyChain
 {
@@ -43,20 +44,18 @@ namespace SupplyChain
 
         public IEnumerable<Packet> Remove(Filter filter, int amount)
         {
-            var ps = new List<Packet>();
-            foreach (var shape in buffer.Keys)
+            var keys = buffer.Keys.ToArray();
+            foreach (var shape in keys)
             {
                 if (!filter.MatchShape(shape)) continue;
                 
                 var pRemove = buffer[shape].NewAmount(-amount);
                 var added = AddPacket(pRemove);
                 if (added == 0) continue;
-                ps.Add(pRemove.NewAmount(-added));
+                yield return pRemove.NewAmount(-added);
                 amount += added;
-                if (amount == 0) return ps;
+                if (amount == 0) break;
             }
-
-            return ps;
         }
 
         private int AddPacket(Packet packet)

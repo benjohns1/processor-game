@@ -28,11 +28,10 @@ namespace Unity.Scripts
         private float posRound;
         private bool inputHandled = false;
         private EventSystem es;
-        private float lineZ = 1;
-        private float currentLineZ = -1;
-        private float placeZ = 0;
-
-        private NodeGraph nodeGraph;
+        private const float LineZ = 1;
+        private const float CurrentLineZ = -1;
+        private const float PlaceZ = 0;
+        
         private MonoGraph mGraph;
 
         private void Awake()
@@ -43,7 +42,6 @@ namespace Unity.Scripts
             es = EventSystem.current;
 
             mGraph = GetComponent<MonoGraph>();
-            nodeGraph = mGraph.GetGraph();
         }
 
         private float OnGrid(float x)
@@ -74,7 +72,8 @@ namespace Unity.Scripts
                 return;
             }
 
-            currentLine.SetPosition(1, OnGrid(cam.ScreenToWorldPoint(Input.mousePosition), currentLineZ));
+            var pos = cam.ScreenToWorldPoint(Input.mousePosition);
+            currentLine.SetPosition(1, new Vector3(pos.x, pos.y, CurrentLineZ));
         }
 
         private void HandleInput()
@@ -129,7 +128,7 @@ namespace Unity.Scripts
 
             currentLine.enabled = false;
             currentLine.positionCount = 2;
-            currentLine.SetPosition(0, OnGrid(pos, currentLineZ));
+            currentLine.SetPosition(0, OnGrid(pos, CurrentLineZ));
             DrawCurrentLine();
             currentLineStart = go;
             currentLine.enabled = true;
@@ -163,11 +162,11 @@ namespace Unity.Scripts
                 return;
             }
 
-            MonoGraph.CreateTransportConnector(mGraph, new MonoGraph.DrawConnector{
+            mGraph.CreateTransportConnector(new MonoGraph.DrawConnector{
                 Prefab = connectorPrefab,
-                Start = OnGrid(currentLineStart.transform.position, lineZ),
+                Start = OnGrid(currentLineStart.transform.position, LineZ),
                 Upstream = currentLineStart.GetComponentInParent(typeof(IMonoNode)) as IMonoNode,
-                End = OnGrid(go.transform.position, lineZ),
+                End = OnGrid(go.transform.position, LineZ),
                 Downstream = go.GetComponentInParent(typeof(IMonoNode)) as IMonoNode,
             });
 
@@ -178,11 +177,11 @@ namespace Unity.Scripts
         private void PlaceProcessor(Selection s)
         {
             var pos = cam.ScreenToWorldPoint(Input.mousePosition);
-            var gridPos = new Vector3(OnGrid(pos.x), OnGrid(pos.y), placeZ);
+            var gridPos = new Vector3(OnGrid(pos.x), OnGrid(pos.y), PlaceZ);
             switch (s)
             {
                 case Selection.Plus:
-                    MonoGraph.CreateNode(mGraph, plus, gridPos);
+                    mGraph.CreateNode(plus, gridPos);
                     return;
             }
             

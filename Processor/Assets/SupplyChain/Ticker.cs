@@ -7,14 +7,18 @@ namespace SupplyChain
         public uint Tick = 0;
     }
 
-    [Serializable]
     public class Ticker
     {
         public event EventHandler<TickEventArgs> Tick;
         
-        private uint update = 0;
-        private uint tick = 0;
-        private uint updatesPerTick = 100;
+        private uint update;
+        private uint tick;
+        private uint updatesPerTick;
+
+        public void SetTickRate(uint upt)
+        {
+            updatesPerTick = upt;
+        }
         
         public void FixedUpdate()
         {
@@ -29,11 +33,6 @@ namespace SupplyChain
             {
                 Tick = tick
             });
-        }
-
-        public uint GetTick()
-        {
-            return tick;
         }
 
         protected virtual void OnTick(TickEventArgs e)

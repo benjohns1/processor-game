@@ -7,55 +7,25 @@ namespace SupplyChain
     [Serializable]
     public class Source : INode, IBuffer
     {
-        [Serializable]
-        public class Rate
-        {
-            private int shape;
-            private int ticks;
-            private uint lastTick = 0;
-
-            public Rate(int shape, int ticks)
-            {
-                this.shape = shape;
-                this.ticks = ticks;
-            }
-
-            public int Produce(uint tick)
-            {
-                if (ticks == 0)
-                {
-                    lastTick = tick;
-                    return 0;
-                }
-
-                var numTicks = (int) (tick - lastTick);
-                lastTick = tick;
-                var numProductions = numTicks / ticks;
-                return numProductions * shape;
-            }
-        }
-        
         public Shape shape;
         public Rate rate;
         private readonly Buffer buffer = new Buffer();
-        private Ticker ticker;
         private Node node;
 
-        public Source(Shape shape, Rate rate, Ticker ticker)
+        public Source(Shape shape, Rate rate, Ticker ticker, int maxDownstream)
         {
             this.shape = shape;
             this.rate = rate;
-            this.ticker = ticker;
             ticker.Tick += (sender, args) =>
             {
                 Tick(args.Tick);
             };
-            node = new Node(0, 1);
+            node = new Node(0, maxDownstream);
         }
 
         private void Tick(uint tick)
         {
-             var add = rate.Produce(tick);
+             var add = rate.GetAmount(tick);
              if (add == 0)
              {
                  return;
