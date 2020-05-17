@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-using SupplyChain;
-using SupplyChain.Graph;
+﻿using SupplyChain.Graph;
 using UnityEngine;
 
-namespace Unity.Scripts
+namespace Unity.Scripts.Mgr
 {
     public class MonoGraph : MonoBehaviour
     {

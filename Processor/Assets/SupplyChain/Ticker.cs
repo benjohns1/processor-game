@@ -10,20 +10,20 @@ namespace SupplyChain
     public class Ticker
     {
         public event EventHandler<TickEventArgs> Tick;
+        public uint UpdatesPerTick { get; private set; }
         
         private uint update;
         private uint tick;
-        private uint updatesPerTick;
 
         public void SetTickRate(uint upt)
         {
-            updatesPerTick = upt;
+            UpdatesPerTick = upt;
         }
         
         public void FixedUpdate()
         {
             update++;
-            if (update % updatesPerTick != 0)
+            if (update % UpdatesPerTick != 0)
             {
                 return;
             }

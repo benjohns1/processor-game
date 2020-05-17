@@ -1,9 +1,8 @@
 ﻿using SupplyChain;
-using SupplyChain.Graph;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Unity.Scripts
+namespace Unity.Scripts.Mgr
 {
     public class MonoScore : MonoBehaviour
     {

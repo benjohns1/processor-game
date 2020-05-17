@@ -7,11 +7,12 @@ namespace SupplyChain
     public interface ITransporter
     {
         IConnector GetConnector();
+        event EventHandler<Transporter.PacketsMovedArgs> PacketsMoved;
     }
     
     public class Transporter : ITransporter
     {
-        private class MovingPacket
+        public class MovingPacket
         {
             public Packet Packet;
             public int Location;
@@ -21,6 +22,13 @@ namespace SupplyChain
                 return $"{Packet} at {Location}";
             }
         }
+        
+        public class PacketsMovedArgs : EventArgs
+        {
+            public IEnumerable<MovingPacket> packets;
+        }
+            
+        public event EventHandler<PacketsMovedArgs> PacketsMoved;
         
         private readonly IConnector connector;
         private readonly int length;
@@ -55,6 +63,8 @@ namespace SupplyChain
         {
             return (sender, args) =>
             {
+                var initialCount = packets.Count;
+                
                 // Move items along transporter
                 foreach (var item in packets)
                 {
@@ -90,9 +100,22 @@ namespace SupplyChain
                         Location = 0,
                     });
                 }
+
+                if (initialCount > 0 || packets.Count > 0)
+                {
+                    OnPacketsMoved(new PacketsMovedArgs
+                    {
+                        packets = packets
+                    });
+                }
             };
         }
 
         public IConnector GetConnector() => connector;
+
+        private void OnPacketsMoved(PacketsMovedArgs e)
+        {
+            PacketsMoved?.Invoke(this, e);
+        }
     }
 }

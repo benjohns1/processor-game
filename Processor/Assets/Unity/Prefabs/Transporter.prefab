@@ -139,5 +139,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d779cdbe835b4aae9c00314ca1d6e6b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  packetPrefab: {fileID: 382037574006118342, guid: 3c24033ebfcd2dd4eadd7f3f81320547,
+    type: 3}
   rate: 1
   speed: 1000

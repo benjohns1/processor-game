@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using SupplyChain;
 
-namespace Unity.Scripts
+namespace Unity.Scripts.Mgr
 {
     public class MonoTicker : MonoBehaviour
     {

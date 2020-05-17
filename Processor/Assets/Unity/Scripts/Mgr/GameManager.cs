@@ -1,10 +1,9 @@
 ﻿using System;
-using SupplyChain.Graph;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-namespace Unity.Scripts
+namespace Unity.Scripts.Mgr
 {
     internal enum Selection
     {
