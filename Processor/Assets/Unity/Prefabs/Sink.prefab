@@ -28,7 +28,7 @@ RectTransform:
   m_GameObject: {fileID: 2432080383630624280}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 28, y: 28, z: 1}
+  m_LocalScale: {x: 0.1, y: 0.1, z: 1}
   m_Children: []
   m_Father: {fileID: 5799654452296580310}
   m_RootOrder: 1
@@ -77,7 +77,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 1b3612d7aa25e2647b942c36d46d5619, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 1c65fe82563d495459deada09ea6b79d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -105,7 +105,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.01, y: 0.01}
+    oldSize: {x: 2.88, y: 2.88}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -295,7 +295,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f068b021fa564810927d1eee639297cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  text: {fileID: 828043289653078318}
+  shapeCountText: {fileID: 828043289653078318}
+  shapeIcon: {fileID: 6010857971312801002}
+  packetPrefab: {fileID: 382037574006118342, guid: 3c24033ebfcd2dd4eadd7f3f81320547,
+    type: 3}
   shape: 0
   packetAmount: 3
   tickRate: 1

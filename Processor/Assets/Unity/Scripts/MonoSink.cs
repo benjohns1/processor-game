@@ -7,7 +7,9 @@ namespace Unity.Scripts
 {
     public class MonoSink : MonoBehaviour, IMonoNode
     {
-        [SerializeField] private TextMesh text;
+        [SerializeField] private TextMesh shapeCountText;
+        [SerializeField] private SpriteRenderer shapeIcon;
+        [SerializeField] private MonoPacket packetPrefab;
         [SerializeField] private Shape shape;
         [SerializeField] private int packetAmount = 1;
         [SerializeField] private int tickRate = 1;
@@ -20,7 +22,8 @@ namespace Unity.Scripts
 
         private void Awake()
         {
-            text.text = "";
+            shapeCountText.text = "";
+            shapeIcon.sprite = packetPrefab.GetSprite(shape);
             
             var ticker = FindObjectOfType<MonoTicker>().ticker;
             var score = FindObjectOfType<MonoScore>().score;
@@ -29,7 +32,7 @@ namespace Unity.Scripts
             sink = new Sink(score, filter, new Rate(packetAmount, tickRate), ticker, maxUpstream);
             sink.Updated += (sender, args) =>
             {
-                text.text = $"{args.Buffer}";
+                shapeCountText.text = $"{args.Buffer}";
             };
             sink.Activated += (sender, args) =>
             {

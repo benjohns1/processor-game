@@ -133,6 +133,11 @@ PrefabInstance:
       propertyPath: shape
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1755894199112261481, guid: 05ddc9364d2d7884199bd27fdafd19f3,
+        type: 3}
+      propertyPath: packetAmount
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 3672735335158151321, guid: 05ddc9364d2d7884199bd27fdafd19f3,
         type: 3}
       propertyPath: m_Name

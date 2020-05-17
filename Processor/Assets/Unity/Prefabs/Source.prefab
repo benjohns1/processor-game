@@ -295,8 +295,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc87b7837dd87ff4f9581885006147d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  text: {fileID: 7867005546114208930}
+  shapeCountText: {fileID: 764844626556287148}
+  shapeIcon: {fileID: 5947656026861249896}
+  packetPrefab: {fileID: 382037574006118342, guid: 3c24033ebfcd2dd4eadd7f3f81320547,
+    type: 3}
   shape: 0
+  packetAmount: 1
+  tickRate: 1
+  maxDownstream: 1
 --- !u!1 &7867005546114208930
 GameObject:
   m_ObjectHideFlags: 0

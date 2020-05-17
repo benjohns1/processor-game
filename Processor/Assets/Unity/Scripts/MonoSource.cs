@@ -7,7 +7,9 @@ namespace Unity.Scripts
 {
     public class MonoSource : MonoBehaviour, IMonoNode
     {
-        [SerializeField] private GameObject text;
+        [SerializeField] private TextMesh shapeCountText;
+        [SerializeField] private SpriteRenderer shapeIcon;
+        [SerializeField] private MonoPacket packetPrefab;
         [SerializeField] private Shape shape;
         [SerializeField] private int packetAmount = 1;
         [SerializeField] private int tickRate = 1;
@@ -16,20 +18,18 @@ namespace Unity.Scripts
 
      
         private Source source;
-        private TextMesh textMesh;
-
         private void Awake()
         {
             var monoTicker = FindObjectOfType<MonoTicker>();
             var ticker = monoTicker.GetComponent<MonoTicker>().ticker;
             
-            textMesh = text.GetComponent<TextMesh>();
-            textMesh.text = "";
+            shapeCountText.text = "";
+            shapeIcon.sprite = packetPrefab.GetSprite(shape);
             
             source = new Source(shape, new Rate(packetAmount, tickRate), ticker, maxDownstream);
             source.Updated += (sender, args) =>
             {
-                textMesh.text = $"{args.Buffer}";
+                shapeCountText.text = $"{args.Buffer}";
             };
         }
 

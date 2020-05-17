@@ -22,17 +22,19 @@ namespace Unity.Scripts
         {
             transform.position = pos;
             MovingPacket = mp;
-            switch (mp.Packet.Shape)
+            icon.sprite = GetSprite(mp.Packet.Shape);
+        }
+
+        public Sprite GetSprite(Shape shape)
+        {
+            switch (shape)
             {
                 case Shape.Triangle:
-                    icon.sprite = triangle;
-                    break;
+                    return triangle;
                 case Shape.Square:
-                    icon.sprite = square;
-                    break;
+                    return square;
                 default:
-                    icon.sprite = null;
-                    break;
+                    return null;
             }
         }
     }
