@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using SupplyChain;
 using SupplyChain.Graph;
 using SupplyChain.Processes;
@@ -7,17 +8,26 @@ using Unity.Scripts.Mgr;
 
 namespace Unity.Scripts
 {
-    public enum Process
+    public enum ProcessType
     {
-        Complex
+        AddOne,
+        SubOne,
+    }
+    
+    [Serializable]
+    public class ProcessConfig
+    {
+        public ProcessType processType;
+        public Sprite sprite;
+        public Vector2 spriteScale = Vector2.one;
+        public UnityFilter inputFilter;
     }
     
     public class MonoProcessor : MonoBehaviour, IMonoNode
     {
-        [SerializeField] private Process process;
-        [SerializeField] private bool allShapes;
-        [SerializeField] private Shape[] includeShapes;
-        [SerializeField] private Shape[] excludeShapes;
+        [SerializeField] private ProcessConfig[] processes;
+
+        [SerializeField] private ProcessType processType;
         [SerializeField] private TextMesh inputText;
         [SerializeField] private TextMesh outputText;
         [SerializeField] private SpriteRenderer icon;
@@ -26,8 +36,7 @@ namespace Unity.Scripts
         [SerializeField] private int maxUpstream = 1;
         [SerializeField] private int maxDownstream = 1;
         [SerializeField] private int rate = 1;
-        
-        private MonoTicker monoTicker;   
+         
         private IProcessor processor;
         private Ticker ticker;
 
@@ -36,21 +45,19 @@ namespace Unity.Scripts
             inputText.text = "";
             outputText.text = "";
             ticker = FindObjectOfType<MonoTicker>().ticker;
-            var filter = new Filter(allShapes, includeShapes, excludeShapes);
-            IProcess p;
-            switch (process)
-            {
-                case Process.Complex:
-                    p = new Complex(filter);
-                    break;
-                default:
-                    throw new Exception("unhandled process type");
-            }
-
-            Init(p);
         }
 
-        private void Init(IProcess p)
+        public void SetProcess(ProcessType process)
+        {
+            processType = process;
+        }
+        
+        private ProcessConfig GetProcessConfig(ProcessType p)
+        {
+            return processes.FirstOrDefault(ps => ps.processType == p);
+        }
+
+        private void CreateProcessor(IProcess p)
         {
             processor = new Processor(p, rate, ticker, maxUpstream, maxDownstream);
             processor.Updated += (sender, args) =>
@@ -78,6 +85,25 @@ namespace Unity.Scripts
 
         public bool Init(NodeGraph g)
         {
+            var cfg = GetProcessConfig(processType);
+            icon.sprite = cfg.sprite;
+            icon.transform.localScale = cfg.spriteScale;
+            
+            IProcess p;
+            switch (processType)
+            {
+                case ProcessType.AddOne:
+                    p = new AddOne(cfg.inputFilter.GetFilter());
+                    break;
+                case ProcessType.SubOne:
+                    p = new SubOne(cfg.inputFilter.GetFilter());
+                    break;
+                default:
+                    throw new Exception($"unhandled process type {processType}");
+            }
+            CreateProcessor(p);
+            
+            
             return g.AddNode(processor);
         }
     }

@@ -10,14 +10,15 @@ namespace Unity.Scripts.Mgr
             return Mathf.RoundToInt(distance * 1000f);
         }
         
-        public void CreateNode(GameObject prefab, Vector3 pos)
+        public void CreateProcessorNode(MonoProcessor processorPrefab, ProcessType process, Vector3 pos)
         {
             // Display in game
-            var go = Instantiate(prefab, pos, Quaternion.identity);
-            var mNode = go.GetComponent(typeof(IMonoNode)) as IMonoNode;
+            var processor = Instantiate(processorPrefab, pos, Quaternion.identity);
+            processor.SetProcess(process);
+            var mNode = processor.GetComponent(typeof(IMonoNode)) as IMonoNode;
             if (mNode == null || !mNode.Init(nodeGraph))
             {
-                Destroy(go);
+                Destroy(processor);
             }
         }
 

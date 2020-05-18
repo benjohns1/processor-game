@@ -8,18 +8,20 @@ namespace Unity.Scripts.Mgr
     internal enum Selection
     {
         Line,
-        Plus
+        AddOne,
+        SubOne,
     }
 
     [RequireComponent(typeof(MonoGraph))]
     public class GameManager : MonoBehaviour
     {
-        [SerializeField] private GameObject plus;
+        [SerializeField] private MonoProcessor processorPrefab;
         [SerializeField] private Camera cam;
         [SerializeField] private float gridSize = 1f;
         [SerializeField] private GameObject connectorPrefab;
         [SerializeField] private LineRenderer currentLine;
-        [SerializeField] private Button buttonPlus;
+        [SerializeField] private Button buttonAddOne;
+        [SerializeField] private Button buttonSubOne;
         [SerializeField] private Button buttonLine;
         
         private GameObject currentLineStart;
@@ -36,7 +38,8 @@ namespace Unity.Scripts.Mgr
         private void Awake()
         {
             posRound = 1 / gridSize;
-            buttonPlus.onClick.AddListener(delegate { Select(Selection.Plus); });
+            buttonAddOne.onClick.AddListener(delegate { Select(Selection.AddOne); });
+            buttonSubOne.onClick.AddListener(delegate { Select(Selection.SubOne); });
             buttonLine.onClick.AddListener(delegate { Select(Selection.Line); });
             es = EventSystem.current;
 
@@ -102,17 +105,13 @@ namespace Unity.Scripts.Mgr
                 return;
             }
 
-            switch (selection)
+            if (selection == Selection.Line)
             {
-                case Selection.Plus:
-                    PlaceProcessor(selection);
-                    break;
-                case Selection.Line:
-                    StartDrawingLine();
-                    break;
-                default:
-                    break;
-            }
+                StartDrawingLine();
+                return;
+            } 
+            
+            PlaceProcessor(selection);
         }
 
         private void StartDrawingLine()
@@ -179,8 +178,11 @@ namespace Unity.Scripts.Mgr
             var gridPos = new Vector3(OnGrid(pos.x), OnGrid(pos.y), PlaceZ);
             switch (s)
             {
-                case Selection.Plus:
-                    mGraph.CreateNode(plus, gridPos);
+                case Selection.AddOne:
+                    mGraph.CreateProcessorNode(processorPrefab, ProcessType.AddOne, gridPos);
+                    return;
+                case Selection.SubOne:
+                    mGraph.CreateProcessorNode(processorPrefab, ProcessType.SubOne, gridPos);
                     return;
             }
             

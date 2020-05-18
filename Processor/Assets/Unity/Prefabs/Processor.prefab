@@ -46,10 +46,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e4e0eb788e64c9cb4098cc806c460f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  process: 0
-  allShapes: 1
-  includeShapes: 
-  excludeShapes: 
+  processes:
+  - processType: 0
+    sprite: {fileID: 21300000, guid: 19e5ba7d75c4f2e4e8d2151606339bf3, type: 3}
+    spriteScale: {x: 0.2, y: 0.2}
+    inputFilter:
+      allShapes: 1
+      includeShapes: 
+      excludeShapes: 
+  - processType: 1
+    sprite: {fileID: 21300000, guid: 0f3ba1ed6373fec4bbd0490fb756f318, type: 3}
+    spriteScale: {x: 0.2, y: 0.2}
+    inputFilter:
+      allShapes: 1
+      includeShapes: 
+      excludeShapes: 
+  processType: 0
   inputText: {fileID: 2960116911159422155}
   outputText: {fileID: 3974281207258307772}
   icon: {fileID: 2911269969066348154}

@@ -3,11 +3,11 @@ using System.Linq;
 
 namespace SupplyChain.Processes
 {
-    public class Complex : IProcess
+    public class AddOne : IProcess
     {
         public Filter Filter { get; }
         
-        public Complex(Filter filter)
+        public AddOne(Filter filter)
         {
             Filter = filter;
         }
@@ -17,7 +17,7 @@ namespace SupplyChain.Processes
             return packets.Select(Process);
         }
 
-        private Packet Process(Packet packet)
+        private static Packet Process(Packet packet)
         {
             switch (packet.Shape)
             {
@@ -27,6 +27,8 @@ namespace SupplyChain.Processes
                     return packet.NewShape(Shape.Pentagon);
                 case Shape.Pentagon:
                     return packet.NewShape(Shape.Hexagon);
+                case Shape.Hexagon:
+                    return packet;
                 default:
                     return packet;
             }
