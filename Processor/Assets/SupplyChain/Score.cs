@@ -2,47 +2,52 @@
 
 namespace SupplyChain
 {
-    public class Score
+    public interface IScorer
+    {
+        event EventHandler<Score.UpdatedArgs> Updated;
+    }
+    
+    public class Score : IScorer
     {
         public event EventHandler<UpdatedArgs> Updated;
 
         public class UpdatedArgs : EventArgs
         {
             public int Score;
-            public int ChangeAmount;
         }
         
         private int score = 0;
+
+        private static int SinkShapeScore(Shape shape)
+        {
+            switch (shape)
+            {
+                case Shape.Triangle:
+                    return 3;
+                case Shape.Square:
+                    return 4;
+                case Shape.Pentagon:
+                    return 5;
+                case Shape.Hexagon:
+                    return 6;
+                default:
+                    throw new Exception($"shape {shape} not scored");
+            }
+        }
 
         public void RegisterSink(Sink sink)
         {
             sink.PacketSunk += (sender, args) =>
             {
-                var amount = args.Packet.Amount;
-                switch (args.Packet.Shape)
-                {
-                    case Shape.Triangle:
-                        amount *= 3;
-                        break;
-                    case Shape.Square:
-                        amount *= 4;
-                        break;
-                    default:
-                        amount *= 2;
-                        break;
-                }
-
-                score += amount;
-
+                score += args.Packet.Amount * SinkShapeScore(args.Packet.Shape);
                 OnUpdated(new UpdatedArgs
                 {
                     Score = score,
-                    ChangeAmount = amount,
                 });
             };
         }
 
-        protected virtual void OnUpdated(UpdatedArgs e)
+        private void OnUpdated(UpdatedArgs e)
         {
             Updated?.Invoke(this, e);
         }

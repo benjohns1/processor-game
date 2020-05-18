@@ -24,7 +24,9 @@ namespace Unity.Scripts
             var ticker = monoTicker.GetComponent<MonoTicker>().ticker;
             
             shapeCountText.text = "";
-            shapeIcon.sprite = packetPrefab.GetSprite(shape);
+            var ss = packetPrefab.GetSprite(shape);
+            shapeIcon.sprite = ss.sprite;
+            shapeIcon.transform.localScale = ss.scale * 2;
             
             source = new Source(shape, new Rate(packetAmount, tickRate), ticker, maxDownstream);
             source.Updated += (sender, args) =>

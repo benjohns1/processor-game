@@ -93,6 +93,8 @@ namespace SupplyChain
     public enum Shape
     {
         Triangle,
-        Square
+        Square,
+        Pentagon,
+        Hexagon
     }
 }

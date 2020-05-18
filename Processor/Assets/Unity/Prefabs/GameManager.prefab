@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 2115779969402537583}
   - component: {fileID: 8887860496529877163}
   - component: {fileID: 121932480548013842}
+  - component: {fileID: 7434242809220210696}
+  - component: {fileID: -6956541004994300112}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -77,3 +79,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 961f652a481b4790a73f613da393498f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  updatesPerTick: 10
+--- !u!114 &7434242809220210696
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2115779969402537580}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f51fc2d93684195a831bbbd2981676f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  text: {fileID: 0}
+--- !u!114 &-6956541004994300112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2115779969402537580}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae24feac9032421881e2442ecf7c0e7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  winScore: 2000
+  text: {fileID: 0}
+  wonText: You Won!

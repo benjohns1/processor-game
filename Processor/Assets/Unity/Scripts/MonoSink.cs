@@ -23,7 +23,9 @@ namespace Unity.Scripts
         private void Awake()
         {
             shapeCountText.text = "";
-            shapeIcon.sprite = packetPrefab.GetSprite(shape);
+            var ss = packetPrefab.GetSprite(shape);
+            shapeIcon.sprite = ss.sprite;
+            shapeIcon.transform.localScale = ss.scale * 2;
             
             var ticker = FindObjectOfType<MonoTicker>().ticker;
             var score = FindObjectOfType<MonoScore>().score;

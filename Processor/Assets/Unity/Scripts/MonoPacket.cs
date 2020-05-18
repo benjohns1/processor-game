@@ -1,15 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using SupplyChain;
 using UnityEngine;
 
 namespace Unity.Scripts
 {
+    [Serializable]
+    public class ShapeSprite
+    {
+        public Shape shape;
+        public Sprite sprite;
+        public Vector2 scale = Vector2.one;
+    }
     
     [RequireComponent(typeof(SpriteRenderer))]
     public class MonoPacket : MonoBehaviour
     {
-        [SerializeField] private Sprite triangle;
-        [SerializeField] private Sprite square;
+        [SerializeField] private ShapeSprite[] shapes;
+
         private SpriteRenderer icon;
         public Transporter.MovingPacket MovingPacket { get; private set; }
 
@@ -22,20 +31,14 @@ namespace Unity.Scripts
         {
             transform.position = pos;
             MovingPacket = mp;
-            icon.sprite = GetSprite(mp.Packet.Shape);
+            var ss = GetSprite(mp.Packet.Shape);
+            icon.sprite = ss.sprite;
+            icon.transform.localScale = ss.scale;
         }
 
-        public Sprite GetSprite(Shape shape)
+        public ShapeSprite GetSprite(Shape shape)
         {
-            switch (shape)
-            {
-                case Shape.Triangle:
-                    return triangle;
-                case Shape.Square:
-                    return square;
-                default:
-                    return null;
-            }
+            return shapes.FirstOrDefault(shapeSprite => shapeSprite.shape == shape);
         }
     }
 }

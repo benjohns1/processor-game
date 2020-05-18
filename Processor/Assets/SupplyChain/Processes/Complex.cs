@@ -9,7 +9,7 @@ namespace SupplyChain.Processes
         
         public Complex(Filter filter)
         {
-            this.Filter = filter;
+            Filter = filter;
         }
         
         public IEnumerable<Packet> Run(IEnumerable<Packet> packets)
@@ -24,7 +24,9 @@ namespace SupplyChain.Processes
                 case Shape.Triangle:
                     return packet.NewShape(Shape.Square);
                 case Shape.Square:
-                    return packet;
+                    return packet.NewShape(Shape.Pentagon);
+                case Shape.Pentagon:
+                    return packet.NewShape(Shape.Hexagon);
                 default:
                     return packet;
             }

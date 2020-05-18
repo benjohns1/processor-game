@@ -9,7 +9,6 @@ namespace Unity.Scripts.Mgr
         [SerializeField] private Text text;
 
         public Score score = new Score();
-        private Text t;
 
         private void Awake()
         {
