@@ -1,12 +1,11 @@
 ﻿using UnityEngine;
-using SupplyChain;
 
 namespace Unity.Scripts.Mgr
 {
-    public class MonoTicker : MonoBehaviour
+    public class Ticker : MonoBehaviour
     {
         [SerializeField] private uint updatesPerTick = 30;
-        public Ticker ticker = new Ticker();
+        public SupplyChain.Ticker ticker = new SupplyChain.Ticker();
 
         private void Awake()
         {

@@ -21,12 +21,10 @@ namespace SupplyChain
         public class UpdatedArgs : EventArgs
         {
             public readonly Packet Buffer;
-            public readonly int ChangedAmount;
 
-            public UpdatedArgs(Packet buffer, int changedAmount)
+            public UpdatedArgs(Packet buffer)
             {
                 Buffer = buffer;
-                ChangedAmount = changedAmount;
             }
         }
 
@@ -38,7 +36,7 @@ namespace SupplyChain
                 return 0;
             }
             
-            OnBufferUpdated(new UpdatedArgs(buffer[packet.Shape], added));
+            OnBufferUpdated(new UpdatedArgs(buffer[packet.Shape]));
             return added;
         }
 

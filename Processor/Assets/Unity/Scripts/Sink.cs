@@ -2,14 +2,16 @@
 using SupplyChain.Graph;
 using UnityEngine;
 using Unity.Scripts.Mgr;
+using Score = Unity.Scripts.Mgr.Score;
+using Ticker = Unity.Scripts.Mgr.Ticker;
 
 namespace Unity.Scripts
 {
-    public class MonoSink : MonoBehaviour, IMonoNode
+    public class Sink : MonoBehaviour, INode
     {
         [SerializeField] private TextMesh shapeCountText;
         [SerializeField] private SpriteRenderer shapeIcon;
-        [SerializeField] private MonoPacket packetPrefab;
+        [SerializeField] private Packet packetPrefab;
         [SerializeField] private Shape shape;
         [SerializeField] private Rate rate = new Rate();
         [SerializeField] private int maxUpstream = 1;
@@ -17,7 +19,7 @@ namespace Unity.Scripts
         [SerializeField] private Color activeColor;
         [SerializeField] private Color inactiveColor;
 
-        private Sink sink;
+        private SupplyChain.Sink sink;
 
         private void Awake()
         {
@@ -26,11 +28,11 @@ namespace Unity.Scripts
             shapeIcon.sprite = ss.sprite;
             shapeIcon.transform.localScale = ss.scale * 2;
             
-            var ticker = FindObjectOfType<MonoTicker>().ticker;
-            var score = FindObjectOfType<MonoScore>().score;
+            var ticker = FindObjectOfType<Ticker>().ticker;
+            var score = FindObjectOfType<Score>().score;
 
             var filter = SupplyChain.Filter.AllowShapes(shape);
-            sink = new Sink(score, filter, rate.Get(), ticker, maxUpstream);
+            sink = new SupplyChain.Sink(score, filter, rate.Get(), ticker, maxUpstream);
             sink.Updated += (sender, args) =>
             {
                 shapeCountText.text = $"{args.Buffer}";
@@ -45,7 +47,7 @@ namespace Unity.Scripts
             };
         }
 
-        public INode GetNode()
+        public SupplyChain.Graph.INode GetNode()
         {
             return sink;
         }

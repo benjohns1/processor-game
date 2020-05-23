@@ -5,6 +5,7 @@ using SupplyChain.Graph;
 using SupplyChain.Processes;
 using UnityEngine;
 using Unity.Scripts.Mgr;
+using Ticker = Unity.Scripts.Mgr.Ticker;
 
 namespace Unity.Scripts
 {
@@ -24,7 +25,7 @@ namespace Unity.Scripts
         public Rate rate;
     }
     
-    public class MonoProcessor : MonoBehaviour, IMonoNode
+    public class Processor : MonoBehaviour, INode
     {
         [SerializeField] private ProcessConfig[] processes;
 
@@ -38,13 +39,13 @@ namespace Unity.Scripts
         [SerializeField] private int maxDownstream = 1;
          
         private IProcessor processor;
-        private Ticker ticker;
+        private SupplyChain.Ticker ticker;
 
         private void Awake()
         {
             inputText.text = "";
             outputText.text = "";
-            ticker = FindObjectOfType<MonoTicker>().ticker;
+            ticker = FindObjectOfType<Ticker>().ticker;
         }
 
         public void SetProcess(ProcessType process)
@@ -59,7 +60,7 @@ namespace Unity.Scripts
 
         private void CreateProcessor(IProcess p)
         {
-            processor = new Processor(p, ticker, maxUpstream, maxDownstream);
+            processor = new SupplyChain.Processor(p, ticker, maxUpstream, maxDownstream);
             processor.Updated += (sender, args) =>
             {
                 outputText.text = $"{args.Buffer}";
@@ -78,7 +79,7 @@ namespace Unity.Scripts
             };
         }
 
-        public INode GetNode()
+        public SupplyChain.Graph.INode GetNode()
         {
             return processor;
         }

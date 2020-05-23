@@ -2,39 +2,40 @@
 using SupplyChain.Graph;
 using UnityEngine;
 using Unity.Scripts.Mgr;
+using Ticker = Unity.Scripts.Mgr.Ticker;
 
 namespace Unity.Scripts
 {
-    public class MonoSource : MonoBehaviour, IMonoNode
+    public class Source : MonoBehaviour, INode
     {
         [SerializeField] private TextMesh shapeCountText;
         [SerializeField] private SpriteRenderer shapeIcon;
-        [SerializeField] private MonoPacket packetPrefab;
+        [SerializeField] private Packet packetPrefab;
         [SerializeField] private Shape shape;
         [SerializeField] private Rate rate = new Rate();
         [SerializeField] private int maxDownstream = 1;
 
 
      
-        private Source source;
+        private SupplyChain.Source source;
         private void Awake()
         {
-            var monoTicker = FindObjectOfType<MonoTicker>();
-            var ticker = monoTicker.GetComponent<MonoTicker>().ticker;
+            var monoTicker = FindObjectOfType<Ticker>();
+            var ticker = monoTicker.GetComponent<Ticker>().ticker;
             
             shapeCountText.text = "";
             var ss = packetPrefab.GetSprite(shape);
             shapeIcon.sprite = ss.sprite;
             shapeIcon.transform.localScale = ss.scale * 2;
             
-            source = new Source(shape, rate.Get(), ticker, maxDownstream);
+            source = new SupplyChain.Source(shape, rate.Get(), ticker, maxDownstream);
             source.Updated += (sender, args) =>
             {
                 shapeCountText.text = $"{args.Buffer}";
             };
         }
 
-        public INode GetNode()
+        public SupplyChain.Graph.INode GetNode()
         {
             return source;
         }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using SupplyChain;
 using UnityEngine;
@@ -15,19 +14,19 @@ namespace Unity.Scripts
     }
     
     [RequireComponent(typeof(SpriteRenderer))]
-    public class MonoPacket : MonoBehaviour
+    public class Packet : MonoBehaviour
     {
         [SerializeField] private ShapeSprite[] shapes;
 
         private SpriteRenderer icon;
-        public Transporter.MovingPacket MovingPacket { get; private set; }
+        public SupplyChain.Transporter.MovingPacket MovingPacket { get; private set; }
 
         private void Awake()
         {
             icon = GetComponent<SpriteRenderer>();
         }
 
-        public void Init(Transporter.MovingPacket mp, Vector3 pos)
+        public void Init(SupplyChain.Transporter.MovingPacket mp, Vector3 pos)
         {
             transform.position = pos;
             MovingPacket = mp;

@@ -1,49 +1,50 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
 
 namespace Unity.Scripts.Mgr
 {
     internal enum Selection
     {
         Line,
+        Delete,
         AddOne,
-        SubOne,
+        SubOne
     }
 
-    [RequireComponent(typeof(MonoGraph))]
-    public class GameManager : MonoBehaviour
+    [RequireComponent(typeof(Graph), typeof(Input))]
+    public class Build : MonoBehaviour
     {
-        [SerializeField] private MonoProcessor processorPrefab;
-        [SerializeField] private Camera cam;
+        [SerializeField] private Processor processorPrefab;
         [SerializeField] private float gridSize = 1f;
         [SerializeField] private GameObject connectorPrefab;
         [SerializeField] private LineRenderer currentLine;
         [SerializeField] private Button buttonAddOne;
         [SerializeField] private Button buttonSubOne;
         [SerializeField] private Button buttonLine;
+        [SerializeField] private Button buttonDelete;
         
         private GameObject currentLineStart;
         private Selection selection;
         private float posRound;
-        private bool inputHandled = false;
-        private EventSystem es;
         private const float LineZ = 1;
         private const float CurrentLineZ = -1;
         private const float PlaceZ = 0;
         
-        private MonoGraph mGraph;
+        private Graph mGraph;
+        private Input mInput;
 
         private void Awake()
         {
             posRound = 1 / gridSize;
+            buttonLine.onClick.AddListener(delegate { Select(Selection.Line); });
+            buttonDelete.onClick.AddListener(delegate { Select(Selection.Delete); });
             buttonAddOne.onClick.AddListener(delegate { Select(Selection.AddOne); });
             buttonSubOne.onClick.AddListener(delegate { Select(Selection.SubOne); });
-            buttonLine.onClick.AddListener(delegate { Select(Selection.Line); });
-            es = EventSystem.current;
 
-            mGraph = GetComponent<MonoGraph>();
+            mGraph = GetComponent<Graph>();
+            mInput = GetComponent<Input>();
+            mInput.Toggled += (sender, args) => ActionToggled(args);
         }
 
         private float OnGrid(float x)
@@ -59,7 +60,27 @@ namespace Unity.Scripts.Mgr
         private void Update()
         {
             DrawCurrentLine();
-            HandleInput();
+        }
+
+        private void ActionToggled(Input.ToggledArgs args)
+        {
+            if (currentLine.positionCount != 0 && args.Off(Input.Action.Primary))
+            {
+                StopDrawingLine();
+            }
+
+            if (!args.On(Input.Action.Primary) || args.PointerOverUi)
+            {
+                return;
+            }
+
+            if (selection == Selection.Line)
+            {
+                StartDrawingLine();
+                return;
+            } 
+            
+            PlaceProcessor(selection);
         }
 
         private void DrawCurrentLine()
@@ -74,49 +95,12 @@ namespace Unity.Scripts.Mgr
                 return;
             }
 
-            var pos = cam.ScreenToWorldPoint(Input.mousePosition);
-            currentLine.SetPosition(1, new Vector3(pos.x, pos.y, CurrentLineZ));
-        }
-
-        private void HandleInput()
-        {
-            if (inputHandled)
-            {
-                inputHandled = false;
-                return;
-            }
-
-            if (currentLine.positionCount > 0)
-            {
-
-                if (Input.GetKeyUp(KeyCode.Mouse0))
-                {
-                    StopDrawingLine();
-                }
-            }
-
-            if (!Input.GetKeyDown(KeyCode.Mouse0))
-            {
-                return;
-            }
-
-            if (es.IsPointerOverGameObject())
-            {
-                return;
-            }
-
-            if (selection == Selection.Line)
-            {
-                StartDrawingLine();
-                return;
-            } 
-            
-            PlaceProcessor(selection);
+            currentLine.SetPosition(1, mInput.CursorPosition(CurrentLineZ));
         }
 
         private void StartDrawingLine()
         {
-            var (hit, go, worldPoint) = ScreenTrace(Input.mousePosition);
+            var (hit, go) = ScreenTrace();
             if (!hit)
             {
                 return;
@@ -132,12 +116,10 @@ namespace Unity.Scripts.Mgr
             currentLine.enabled = true;
         }
 
-        private (bool Hit, GameObject Go, Vector2 WorldPoint) ScreenTrace(Vector3 pos)
+        private (bool Hit, GameObject Go) ScreenTrace()
         {
-            var pt = cam.ScreenToWorldPoint(new Vector3(pos.x, pos.y, 0));
-            var wp = new Vector2(pt.x, pt.y);
-            var hit = Physics2D.Raycast(pt, Vector2.zero);
-            return hit.collider == null ? (false, null, wp) : (true, hit.collider.gameObject, wp);
+            var hit = Physics2D.Raycast(mInput.CursorPosition(), Vector2.zero);
+            return hit.collider == null ? (false, null) : (true, hit.collider.gameObject);
         }
 
         private void StopDrawingLine()
@@ -147,7 +129,7 @@ namespace Unity.Scripts.Mgr
                 return;
             }
 
-            var (hit, go, worldPoint) = ScreenTrace(Input.mousePosition);
+            var (hit, go) = ScreenTrace();
             if (!hit)
             {
                 currentLine.positionCount = 0;
@@ -160,12 +142,12 @@ namespace Unity.Scripts.Mgr
                 return;
             }
 
-            mGraph.CreateTransportConnector(new MonoGraph.DrawConnector{
+            mGraph.CreateTransportConnector(new Graph.DrawConnector{
                 Prefab = connectorPrefab,
                 Start = OnGrid(currentLineStart.transform.position, LineZ),
-                Upstream = currentLineStart.GetComponentInParent(typeof(IMonoNode)) as IMonoNode,
+                Upstream = currentLineStart.GetComponentInParent(typeof(INode)) as INode,
                 End = OnGrid(go.transform.position, LineZ),
-                Downstream = go.GetComponentInParent(typeof(IMonoNode)) as IMonoNode,
+                Downstream = go.GetComponentInParent(typeof(INode)) as INode,
             });
 
             currentLine.positionCount = 0;
@@ -174,8 +156,7 @@ namespace Unity.Scripts.Mgr
 
         private void PlaceProcessor(Selection s)
         {
-            var pos = cam.ScreenToWorldPoint(Input.mousePosition);
-            var gridPos = new Vector3(OnGrid(pos.x), OnGrid(pos.y), PlaceZ);
+            var gridPos = OnGrid(mInput.CursorPosition(), PlaceZ);
             switch (s)
             {
                 case Selection.AddOne:
@@ -191,7 +172,7 @@ namespace Unity.Scripts.Mgr
 
         private void Select(Selection s)
         {
-            inputHandled = true;
+            mInput.InputHandled();
             selection = s;
         }
     }

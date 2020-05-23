@@ -2,9 +2,9 @@
 
 namespace Unity.Scripts
 {
-    public interface IMonoNode
+    public interface INode
     {
-        INode GetNode();
+        SupplyChain.Graph.INode GetNode();
         bool Init(NodeGraph g);
     }
 }

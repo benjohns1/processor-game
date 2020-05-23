@@ -1,26 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using SupplyChain;
 using SupplyChain.Graph;
 using UnityEngine;
 using Unity.Scripts.Mgr;
-using UnityEngine.XR;
+using Ticker = Unity.Scripts.Mgr.Ticker;
 
 namespace Unity.Scripts
 {
     [RequireComponent(typeof(LineRenderer))]
-    public class MonoTransporter : MonoBehaviour, IMonoConnector
+    public class Transporter : MonoBehaviour
     {
-        [SerializeField] private MonoPacket packetPrefab;
+        [SerializeField] private Packet packetPrefab;
         [SerializeField] private Rate rate;
         [SerializeField] private int speed = 1000;
 
         private ITransporter transporter;
-        private Ticker ticker;
+        private SupplyChain.Ticker ticker;
         private LineRenderer lr;
         private int length;
-        private readonly List<MonoPacket> packets = new List<MonoPacket>();
+        private readonly List<Packet> packets = new List<Packet>();
         private Vector3 velocity;
         private Vector3 fixedVelocity;
         
@@ -30,11 +28,11 @@ namespace Unity.Scripts
 
         private void Awake()
         {
-            ticker = FindObjectOfType<MonoTicker>().ticker;
+            ticker = FindObjectOfType<Ticker>().ticker;
             lr = GetComponent<LineRenderer>();
         }
 
-        public bool Init(NodeGraph g, IMonoNode upstream, Vector3 start, IMonoNode downstream, Vector3 end)
+        public bool Init(NodeGraph g, INode upstream, Vector3 start, INode downstream, Vector3 end)
         {
             // Create transport connector
             var connector = new Connector(upstream.GetNode(), downstream.GetNode());
@@ -47,10 +45,10 @@ namespace Unity.Scripts
             endPosition = end;
             sqrMagnitude = (end - start).sqrMagnitude;
             
-            length = MonoGraph.DistanceToConnectorLength(Vector3.Distance(start, end));
+            length = Graph.DistanceToConnectorLength(Vector3.Distance(start, end));
             var step = Vector3.Lerp(Vector3.zero, end - start, (float) 1 / length);
             velocity = step * ((float) speed / ticker.UpdatesPerTick);
-            transporter = new Transporter(connector, ticker, length, rate.Get(), speed);
+            transporter = new SupplyChain.Transporter(connector, ticker, length, rate.Get(), speed);
             transporter.PacketsMoved += (sender, args) =>
             {
                 fixedVelocity = velocity / Time.fixedDeltaTime;
@@ -88,8 +86,6 @@ namespace Unity.Scripts
             
             return true;
         }
-
-        public IConnector GetConnector() => transporter.GetConnector();
 
         private void Update()
         {

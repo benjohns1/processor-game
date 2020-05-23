@@ -3,19 +3,19 @@ using UnityEngine;
 
 namespace Unity.Scripts.Mgr
 {
-    public class MonoGraph : MonoBehaviour
+    public class Graph : MonoBehaviour
     {
         public static int DistanceToConnectorLength(float distance)
         {
             return Mathf.RoundToInt(distance * 1000f);
         }
         
-        public void CreateProcessorNode(MonoProcessor processorPrefab, ProcessType process, Vector3 pos)
+        public void CreateProcessorNode(Processor processorPrefab, ProcessType process, Vector3 pos)
         {
             // Display in game
             var processor = Instantiate(processorPrefab, pos, Quaternion.identity);
             processor.SetProcess(process);
-            var mNode = processor.GetComponent(typeof(IMonoNode)) as IMonoNode;
+            var mNode = processor.GetComponent(typeof(INode)) as INode;
             if (mNode == null || !mNode.Init(nodeGraph))
             {
                 Destroy(processor);
@@ -25,9 +25,9 @@ namespace Unity.Scripts.Mgr
         public struct DrawConnector
         {
             public GameObject Prefab;
-            public IMonoNode Upstream;
+            public INode Upstream;
             public Vector3 Start;
-            public IMonoNode Downstream;
+            public INode Downstream;
             public Vector3 End;
         }
 
@@ -35,7 +35,7 @@ namespace Unity.Scripts.Mgr
         {
             // Display in game
             var go = Instantiate(drawConnector.Prefab, Vector3.zero, Quaternion.identity);
-            var monoTransporter = go.GetComponent<MonoTransporter>();
+            var monoTransporter = go.GetComponent<Transporter>();
             if (monoTransporter == null || !monoTransporter.Init(nodeGraph, drawConnector.Upstream, drawConnector.Start, drawConnector.Downstream, drawConnector.End))
             {
                 Destroy(go);
@@ -46,7 +46,7 @@ namespace Unity.Scripts.Mgr
         
         private void Start()
         {
-            var sources = FindObjectsOfType<MonoSource>();
+            var sources = FindObjectsOfType<Source>();
             for (var i = sources.Length - 1; i >= 0; i--)
             {
                 var node = sources[i].GetNode();
