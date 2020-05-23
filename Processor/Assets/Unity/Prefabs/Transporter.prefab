@@ -141,5 +141,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   packetPrefab: {fileID: 382037574006118342, guid: 3c24033ebfcd2dd4eadd7f3f81320547,
     type: 3}
-  rate: 3
-  speed: 300
+  rate: 2
+  speed: 500

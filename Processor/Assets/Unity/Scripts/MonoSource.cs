@@ -11,8 +11,7 @@ namespace Unity.Scripts
         [SerializeField] private SpriteRenderer shapeIcon;
         [SerializeField] private MonoPacket packetPrefab;
         [SerializeField] private Shape shape;
-        [SerializeField] private int packetAmount = 1;
-        [SerializeField] private int tickRate = 1;
+        [SerializeField] private Rate rate = new Rate();
         [SerializeField] private int maxDownstream = 1;
 
 
@@ -28,7 +27,7 @@ namespace Unity.Scripts
             shapeIcon.sprite = ss.sprite;
             shapeIcon.transform.localScale = ss.scale * 2;
             
-            source = new Source(shape, new Rate(packetAmount, tickRate), ticker, maxDownstream);
+            source = new Source(shape, rate.Get(), ticker, maxDownstream);
             source.Updated += (sender, args) =>
             {
                 shapeCountText.text = $"{args.Buffer}";

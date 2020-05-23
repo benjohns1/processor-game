@@ -1,32 +1,16 @@
-﻿using System;
-
-namespace SupplyChain
+﻿namespace SupplyChain
 {
-    [Serializable]
     public class Rate
     {
-        private int packetRate;
-        private int ticks;
-        private uint lastTick;
+        private readonly int amount;
+        private readonly int tickSpan;
 
-        public Rate(int packetRate, int ticks)
+        public Rate(int amount, int tickSpan)
         {
-            this.packetRate = packetRate;
-            this.ticks = ticks;
+            this.amount = amount;
+            this.tickSpan = tickSpan;
         }
 
-        public int GetAmount(uint tick)
-        {
-            if (ticks == 0)
-            {
-                lastTick = tick;
-                return 0;
-            }
-
-            var numTicks = (int) (tick - lastTick);
-            lastTick = tick;
-            var numProductions = numTicks / ticks;
-            return numProductions * packetRate;
-        }
+        public int GetAmount(uint tick) => tickSpan == 0 || tick % tickSpan != 0 ? 0 : amount;
     }
 }

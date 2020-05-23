@@ -25,20 +25,20 @@ namespace SupplyChain
         
         public class PacketsMovedArgs : EventArgs
         {
-            public IEnumerable<MovingPacket> packets;
+            public IEnumerable<MovingPacket> Packets;
         }
             
         public event EventHandler<PacketsMovedArgs> PacketsMoved;
         
         private readonly IConnector connector;
         private readonly int length;
-        private readonly int rate;
+        private readonly Rate rate;
         private readonly int speed;
         private readonly Filter filter;
         private readonly List<MovingPacket> packets = new List<MovingPacket>();
         private readonly List<MovingPacket> removePackets = new List<MovingPacket>();
 
-        public Transporter(IConnector connector, Ticker ticker, int length, int rate, int speed)
+        public Transporter(IConnector connector, Ticker ticker, int length, Rate rate, int speed)
         {
             this.connector = connector;
             this.length = length;
@@ -56,42 +56,43 @@ namespace SupplyChain
                 throw new Exception("transporter input and output must both be IBuffer");
             }
             
-            ticker.Tick += transportOnTick(output, input);
+            ticker.Tick += (sender, args) => Tick(args.Tick, output, input);
         }
 
-        private EventHandler<TickEventArgs> transportOnTick(IBuffer output, IBuffer input)
+        private void Tick(uint tick, IBuffer output, IBuffer input)
         {
-            return (sender, args) =>
+            var initialCount = packets.Count;
+            
+            // Move items along transporter
+            foreach (var item in packets)
             {
-                var initialCount = packets.Count;
+                item.Location += speed;
+                if (item.Location <= length) continue;
                 
-                // Move items along transporter
-                foreach (var item in packets)
+                // Output items at end
+                var removed = output.Add(item.Packet);
+                if (removed == item.Packet.Amount)
                 {
-                    item.Location += speed;
-                    if (item.Location <= length) continue;
-                    
-                    // Output items at end
-                    var removed = output.Add(item.Packet);
-                    if (removed == item.Packet.Amount)
-                    {
-                        removePackets.Add(item);
-                    }
-                    else
-                    {
-                        item.Packet = item.Packet.NewAmount(item.Packet.Amount - removed);
-                    }
+                    removePackets.Add(item);
                 }
+                else
+                {
+                    item.Packet = item.Packet.NewAmount(item.Packet.Amount - removed);
+                }
+            }
 
-                // Remove output items
-                foreach (var item in removePackets)
-                {
-                    packets.Remove(item);
-                }
-                removePackets.Clear();
-                
-                // Remove items from connected input
-                var ps = input.Remove(filter, rate);
+            // Remove output items
+            foreach (var item in removePackets)
+            {
+                packets.Remove(item);
+            }
+            removePackets.Clear();
+            
+            // Add new items to transporter and remove from connected input
+            var amount = rate.GetAmount(tick);
+            if (amount > 0)
+            {
+                var ps = input.Remove(filter, amount);
                 foreach (var packet in ps)
                 {
                     packets.Add(new MovingPacket
@@ -100,15 +101,15 @@ namespace SupplyChain
                         Location = 0,
                     });
                 }
+            }
 
-                if (initialCount > 0 || packets.Count > 0)
+            if (initialCount > 0 || packets.Count > 0)
+            {
+                OnPacketsMoved(new PacketsMovedArgs
                 {
-                    OnPacketsMoved(new PacketsMovedArgs
-                    {
-                        packets = packets
-                    });
-                }
-            };
+                    Packets = packets
+                });
+            }
         }
 
         public IConnector GetConnector() => connector;

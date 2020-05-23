@@ -14,7 +14,6 @@ namespace SupplyChain
             public Packet Packet;
         }
 
-        private Rate rate;
         private readonly Buffer buffer = new Buffer();
         private Node node;
 
@@ -23,18 +22,15 @@ namespace SupplyChain
         public Sink(Score score, Filter filter, Rate rate, Ticker ticker, int maxUpstream)
         {
             Filter = filter;
-            this.rate = rate;
-            ticker.Tick += (sender, args) =>
-            {
-                Tick(args.Tick);
-            };
+            Rate = rate;
+            ticker.Tick += (sender, args) => Tick(args.Tick);
             node = new Node(maxUpstream, 0);
             score.RegisterSink(this);
         }
 
         private void Tick(uint tick)
         {
-            var amount = rate.GetAmount(tick);
+            var amount = Rate.GetAmount(tick);
              if (amount == 0)
              {
                  if (!isActive) return;
@@ -88,6 +84,7 @@ namespace SupplyChain
         }
 
         public Filter Filter { get; }
+        public Rate Rate { get; }
         public event EventHandler Activated;
         public event EventHandler Deactivated;
         public event EventHandler<Buffer.UpdatedArgs> InputUpdated

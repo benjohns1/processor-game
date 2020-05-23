@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using SupplyChain.Graph;
 using SupplyChain.Processes;
-using Unity.Scripts;
 
 namespace SupplyChain
 {
     public interface IProcessor : INode, IBuffer
     {
         Filter Filter { get; }
+        Rate Rate { get; }
         event EventHandler Activated;
         event EventHandler Deactivated;
         event EventHandler<Buffer.UpdatedArgs> InputUpdated;
@@ -27,18 +26,24 @@ namespace SupplyChain
         public event EventHandler Activated;
         public event EventHandler Deactivated;
 
-        public Processor(IProcess process, int rate, Ticker ticker, int maxUpstream, int maxDownstream)
+        public Processor(IProcess process, Ticker ticker, int maxUpstream, int maxDownstream)
         {
             this.process = process;
             node = new Node(maxUpstream, maxDownstream);
-            ticker.Tick += (sender, args) => { ProcessPackets(rate); };
+            ticker.Tick += (sender, args) => Tick(args.Tick);
         }
 
-        private void ProcessPackets(int rate)
+        private void Tick(uint tick)
         {
+            var amount = Rate.GetAmount(tick);
+            if (amount == 0)
+            {
+                return;
+            }
+            
             var wasActive = isActive;
             var activated = false;
-            foreach (var packet in process.Run(input.Remove(Filter, rate)))
+            foreach (var packet in process.Run(input.Remove(Filter, amount)))
             {
                 activated = true;
                 var added = output.Add(packet);
@@ -79,6 +84,7 @@ namespace SupplyChain
         int IBuffer.Add(Packet packet) => input.Add(packet);
         public IEnumerable<Packet> Remove(Filter filter, int amount) => output.Remove(filter, amount);
         public Filter Filter => process.Filter;
+        public Rate Rate => process.Rate;
 
         protected virtual void OnActivated()
         {

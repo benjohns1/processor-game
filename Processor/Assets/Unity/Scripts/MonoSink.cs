@@ -11,8 +11,7 @@ namespace Unity.Scripts
         [SerializeField] private SpriteRenderer shapeIcon;
         [SerializeField] private MonoPacket packetPrefab;
         [SerializeField] private Shape shape;
-        [SerializeField] private int packetAmount = 1;
-        [SerializeField] private int tickRate = 1;
+        [SerializeField] private Rate rate = new Rate();
         [SerializeField] private int maxUpstream = 1;
         [SerializeField] private SpriteRenderer icon;
         [SerializeField] private Color activeColor;
@@ -30,8 +29,8 @@ namespace Unity.Scripts
             var ticker = FindObjectOfType<MonoTicker>().ticker;
             var score = FindObjectOfType<MonoScore>().score;
 
-            var filter = Filter.AllowShapes(shape);
-            sink = new Sink(score, filter, new Rate(packetAmount, tickRate), ticker, maxUpstream);
+            var filter = SupplyChain.Filter.AllowShapes(shape);
+            sink = new Sink(score, filter, rate.Get(), ticker, maxUpstream);
             sink.Updated += (sender, args) =>
             {
                 shapeCountText.text = $"{args.Buffer}";

@@ -138,6 +138,11 @@ PrefabInstance:
       propertyPath: packetAmount
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 1755894199112261481, guid: 05ddc9364d2d7884199bd27fdafd19f3,
+        type: 3}
+      propertyPath: rate.amount
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3672735335158151321, guid: 05ddc9364d2d7884199bd27fdafd19f3,
         type: 3}
       propertyPath: m_Name
@@ -1001,7 +1006,7 @@ PrefabInstance:
     - target: {fileID: 121932480548013842, guid: 7599e73b95d13734d80cdbdc11b27597,
         type: 3}
       propertyPath: updatesPerTick
-      value: 20
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 2115779969402537580, guid: 7599e73b95d13734d80cdbdc11b27597,
         type: 3}
@@ -1567,6 +1572,11 @@ PrefabInstance:
         type: 3}
       propertyPath: shape
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5632014410505883625, guid: 4fb1ad93f353eca43af6a6867f63df08,
+        type: 3}
+      propertyPath: tickRate
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5880584154236349780, guid: 4fb1ad93f353eca43af6a6867f63df08,
         type: 3}

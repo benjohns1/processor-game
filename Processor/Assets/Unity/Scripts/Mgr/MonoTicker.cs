@@ -5,7 +5,7 @@ namespace Unity.Scripts.Mgr
 {
     public class MonoTicker : MonoBehaviour
     {
-        [SerializeField] private uint updatesPerTick = 10;
+        [SerializeField] private uint updatesPerTick = 30;
         public Ticker ticker = new Ticker();
 
         private void Awake()

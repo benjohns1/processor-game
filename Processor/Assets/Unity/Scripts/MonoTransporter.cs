@@ -13,7 +13,7 @@ namespace Unity.Scripts
     public class MonoTransporter : MonoBehaviour, IMonoConnector
     {
         [SerializeField] private MonoPacket packetPrefab;
-        [SerializeField] private int rate = 1;
+        [SerializeField] private Rate rate;
         [SerializeField] private int speed = 1000;
 
         private ITransporter transporter;
@@ -50,14 +50,14 @@ namespace Unity.Scripts
             length = MonoGraph.DistanceToConnectorLength(Vector3.Distance(start, end));
             var step = Vector3.Lerp(Vector3.zero, end - start, (float) 1 / length);
             velocity = step * ((float) speed / ticker.UpdatesPerTick);
-            transporter = new Transporter(connector, ticker, length, rate, speed);
+            transporter = new Transporter(connector, ticker, length, rate.Get(), speed);
             transporter.PacketsMoved += (sender, args) =>
             {
                 fixedVelocity = velocity / Time.fixedDeltaTime;
                 
                 // Refresh all packet locations
                 var i = 0;
-                foreach (var newPacket in args.packets)
+                foreach (var newPacket in args.Packets)
                 {
                     if (packets.Count <= i)
                     {
@@ -74,10 +74,8 @@ namespace Unity.Scripts
                 // Delete any packets no longer needed
                 for (var j = packets.Count - 1; j > i; j--)
                 {
-                    if (packets.Remove(packets[j]))
-                    {
-                        Destroy(packets[j].gameObject);
-                    }
+                    Destroy(packets[j].gameObject);
+                    packets.Remove(packets[j]);
                 }
             };
             

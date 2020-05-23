@@ -16,10 +16,7 @@ namespace SupplyChain
         {
             this.shape = shape;
             this.rate = rate;
-            ticker.Tick += (sender, args) =>
-            {
-                Tick(args.Tick);
-            };
+            ticker.Tick += (sender, args) => Tick(args.Tick);
             node = new Node(0, maxDownstream);
         }
 

@@ -6,5 +6,6 @@ namespace SupplyChain.Processes
     {
         IEnumerable<Packet> Run(IEnumerable<Packet> packets);
         Filter Filter { get; }
+        Rate Rate { get; }
     }
 }

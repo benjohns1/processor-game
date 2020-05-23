@@ -300,8 +300,9 @@ MonoBehaviour:
   packetPrefab: {fileID: 382037574006118342, guid: 3c24033ebfcd2dd4eadd7f3f81320547,
     type: 3}
   shape: 0
-  packetAmount: 3
-  tickRate: 1
+  rate:
+    amount: 10
+    tickSpan: 1
   maxUpstream: 2
   icon: {fileID: 2707589164068370942}
   activeColor: {r: 0, g: 1, b: 0.9700117, a: 1}

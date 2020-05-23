@@ -20,7 +20,8 @@ namespace Unity.Scripts
         public ProcessType processType;
         public Sprite sprite;
         public Vector2 spriteScale = Vector2.one;
-        public UnityFilter inputFilter;
+        public Filter inputFilter;
+        public Rate rate;
     }
     
     public class MonoProcessor : MonoBehaviour, IMonoNode
@@ -35,7 +36,6 @@ namespace Unity.Scripts
         [SerializeField] private Color inactiveColor;
         [SerializeField] private int maxUpstream = 1;
         [SerializeField] private int maxDownstream = 1;
-        [SerializeField] private int rate = 1;
          
         private IProcessor processor;
         private Ticker ticker;
@@ -59,7 +59,7 @@ namespace Unity.Scripts
 
         private void CreateProcessor(IProcess p)
         {
-            processor = new Processor(p, rate, ticker, maxUpstream, maxDownstream);
+            processor = new Processor(p, ticker, maxUpstream, maxDownstream);
             processor.Updated += (sender, args) =>
             {
                 outputText.text = $"{args.Buffer}";
@@ -93,10 +93,10 @@ namespace Unity.Scripts
             switch (processType)
             {
                 case ProcessType.AddOne:
-                    p = new AddOne(cfg.inputFilter.GetFilter());
+                    p = new AddOne(cfg.inputFilter.GetFilter(), cfg.rate.Get());
                     break;
                 case ProcessType.SubOne:
-                    p = new SubOne(cfg.inputFilter.GetFilter());
+                    p = new SubOne(cfg.inputFilter.GetFilter(), cfg.rate.Get());
                     break;
                 default:
                     throw new Exception($"unhandled process type {processType}");

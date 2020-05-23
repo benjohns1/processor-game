@@ -6,10 +6,12 @@ namespace SupplyChain.Processes
     public class AddOne : IProcess
     {
         public Filter Filter { get; }
+        public Rate Rate { get; }
         
-        public AddOne(Filter filter)
+        public AddOne(Filter filter, Rate rate)
         {
             Filter = filter;
+            Rate = rate;
         }
         
         public IEnumerable<Packet> Run(IEnumerable<Packet> packets)
