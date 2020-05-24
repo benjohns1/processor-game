@@ -6,6 +6,7 @@ namespace SupplyChain.Graph
     {
         INode Upstream { get; }
         INode Downstream { get; }
+        bool Clear();
     }
     
     public class Connector : IConnector
@@ -22,6 +23,27 @@ namespace SupplyChain.Graph
         public override string ToString()
         {
             return $"(u:{Upstream.Id} d:{Downstream.Id}";
+        }
+
+        public bool Clear()
+        {
+            if (!Upstream.RemoveDownstream(this))
+            {
+                return false;
+            }
+
+            if (Downstream.RemoveUpstream(this))
+            {
+                return true;
+            }
+            
+            // Couldn't remove upstream, compensate by re-adding previously removed downstream
+            if (!Upstream.AddDownstream(this))
+            {
+                throw new Exception("unable to add downstream");
+            }
+
+            return false;
         }
     }
 }

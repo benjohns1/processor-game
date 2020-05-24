@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using SupplyChain;
 using SupplyChain.Graph;
 using UnityEngine;
@@ -8,9 +9,10 @@ using Ticker = Unity.Scripts.Mgr.Ticker;
 namespace Unity.Scripts
 {
     [RequireComponent(typeof(LineRenderer))]
-    public class Transporter : MonoBehaviour
+    public class Transporter : MonoBehaviour, IDeletable
     {
         [SerializeField] private Packet packetPrefab;
+        [SerializeField] private LineCollider lineCollider;
         [SerializeField] private Rate rate;
         [SerializeField] private int speed = 1000;
 
@@ -25,6 +27,7 @@ namespace Unity.Scripts
         private Vector3 startPosition;
         private Vector3 endPosition;
         private float sqrMagnitude;
+        private Vector3 step;
 
         private void Awake()
         {
@@ -34,6 +37,11 @@ namespace Unity.Scripts
 
         public bool Init(NodeGraph g, INode upstream, Vector3 start, INode downstream, Vector3 end)
         {
+            if (upstream == null || downstream == null)
+            {
+                return false;
+            }
+            
             // Create transport connector
             var connector = new Connector(upstream.GetNode(), downstream.GetNode());
             if (!g.AddConnector(connector))
@@ -46,36 +54,13 @@ namespace Unity.Scripts
             sqrMagnitude = (end - start).sqrMagnitude;
             
             length = Graph.DistanceToConnectorLength(Vector3.Distance(start, end));
-            var step = Vector3.Lerp(Vector3.zero, end - start, (float) 1 / length);
+            step = Vector3.Lerp(Vector3.zero, end - start, (float) 1 / length);
             velocity = step * ((float) speed / ticker.UpdatesPerTick);
             transporter = new SupplyChain.Transporter(connector, ticker, length, rate.Get(), speed);
-            transporter.PacketsMoved += (sender, args) =>
-            {
-                fixedVelocity = velocity / Time.fixedDeltaTime;
-                
-                // Refresh all packet locations
-                var i = 0;
-                foreach (var newPacket in args.Packets)
-                {
-                    if (packets.Count <= i)
-                    {
-                        // Create new packets, if needed
-                        packets.Add(Instantiate(packetPrefab));
-                    }
-                    
-                    packets[i].Init(newPacket, start + newPacket.Location * step);
-                    i++;
-                }
-
-                if (packets.Count <= i) return;
-                
-                // Delete any packets no longer needed
-                for (var j = packets.Count - 1; j > i; j--)
-                {
-                    Destroy(packets[j].gameObject);
-                    packets.Remove(packets[j]);
-                }
-            };
+            transporter.PacketsMoved += TransporterOnPacketsMoved;
+            
+            // Set collider
+            lineCollider.SetCollider(start, end, transform.position.z);
             
             // Display line
             lr.enabled = false;
@@ -83,8 +68,36 @@ namespace Unity.Scripts
             lr.SetPosition(0, start);
             lr.SetPosition(1, end);
             lr.enabled = true;
-            
+
             return true;
+        }
+
+        private void TransporterOnPacketsMoved(object sender, SupplyChain.Transporter.PacketsMovedArgs e)
+        {
+            fixedVelocity = velocity / Time.fixedDeltaTime;
+                
+            // Refresh all packet locations
+            var i = 0;
+            foreach (var newPacket in e.Packets)
+            {
+                if (packets.Count <= i)
+                {
+                    // Create new packets, if needed
+                    packets.Add(Instantiate(packetPrefab, transform));
+                }
+                    
+                packets[i].Init(newPacket, startPosition + newPacket.Location * step);
+                i++;
+            }
+
+            if (packets.Count <= i) return;
+                
+            // Delete any packets no longer needed
+            for (var j = packets.Count - 1; j > i; j--)
+            {
+                Destroy(packets[j].gameObject);
+                packets.Remove(packets[j]);
+            }
         }
 
         private void Update()
@@ -105,6 +118,17 @@ namespace Unity.Scripts
                 }
                 packet.transform.position = endPosition;
             }
+        }
+
+        public bool Delete()
+        {
+            if (!transporter.Disconnect())
+            {
+                return false;
+            }
+            transporter.PacketsMoved -= TransporterOnPacketsMoved;
+            Destroy(gameObject);
+            return true;
         }
     }
 }

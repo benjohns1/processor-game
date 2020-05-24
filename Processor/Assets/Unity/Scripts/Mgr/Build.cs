@@ -1,16 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using Unity.Scripts.UI;
 using UnityEngine;
-using UnityEngine.UI;
+using Unity.Scripts.Targetable;
 
 namespace Unity.Scripts.Mgr
 {
-    internal enum Selection
-    {
-        Line,
-        Delete,
-        AddOne,
-        SubOne
-    }
 
     [RequireComponent(typeof(Graph), typeof(Input))]
     public class Build : MonoBehaviour
@@ -19,13 +14,40 @@ namespace Unity.Scripts.Mgr
         [SerializeField] private float gridSize = 1f;
         [SerializeField] private GameObject connectorPrefab;
         [SerializeField] private LineRenderer currentLine;
-        [SerializeField] private Button buttonAddOne;
-        [SerializeField] private Button buttonSubOne;
-        [SerializeField] private Button buttonLine;
-        [SerializeField] private Button buttonDelete;
+
+        public enum Selection
+        {
+            Line,
+            Delete,
+            AddOne,
+            SubOne
+        }
+
+        [Serializable]
+        public class BuildButton
+        {
+            public Selection selection;
+            public UnityEngine.UI.Button button;
+            public Button handler;
+
+            public BuildButton(Selection s)
+            {
+                selection = s;
+            }
+        }
+
+        // Build menu
+        [SerializeField] private List<BuildButton> buttons = new List<BuildButton>
+        {
+            new BuildButton(Selection.Line),
+            new BuildButton(Selection.Delete),
+            new BuildButton(Selection.AddOne),
+            new BuildButton(Selection.SubOne),
+        };
         
         private GameObject currentLineStart;
         private Selection selection;
+        private ITargetable target;
         private float posRound;
         private const float LineZ = 1;
         private const float CurrentLineZ = -1;
@@ -36,23 +58,42 @@ namespace Unity.Scripts.Mgr
 
         private void Awake()
         {
+            InitBuildMenu();
+            
             posRound = 1 / gridSize;
-            buttonLine.onClick.AddListener(delegate { Select(Selection.Line); });
-            buttonDelete.onClick.AddListener(delegate { Select(Selection.Delete); });
-            buttonAddOne.onClick.AddListener(delegate { Select(Selection.AddOne); });
-            buttonSubOne.onClick.AddListener(delegate { Select(Selection.SubOne); });
 
             mGraph = GetComponent<Graph>();
             mInput = GetComponent<Input>();
             mInput.Toggled += (sender, args) => ActionToggled(args);
         }
+        
+        private void InitBuildMenu()
+        {
+            var group = new List<Button>();
+            foreach (var btn in buttons)
+            {
+                if (btn.button == null)
+                {
+                    throw new Exception("button required for " + btn.selection);
+                }
+
+                btn.handler = new Button(btn.button);
+                btn.handler.Activated += (sender, args) => Select(btn.selection); 
+                group.Add(btn.handler);
+            }
+            foreach (var btn in buttons)
+            {
+                btn.handler.SetGroup(group);
+            }
+        }
+        
 
         private float OnGrid(float x)
         {
             return Mathf.Round(x * posRound) / posRound;
         }
 
-        private Vector3 OnGrid(Vector2 xy, float z)
+        private Vector3 OnGrid(Vector2 xy, float z = 0f)
         {
             return new Vector3(OnGrid(xy.x), OnGrid(xy.y), z);
         }
@@ -60,6 +101,34 @@ namespace Unity.Scripts.Mgr
         private void Update()
         {
             DrawCurrentLine();
+            UpdateTarget();
+        }
+
+        private void UpdateTarget()
+        {
+            if (selection != Selection.Delete)
+            {
+                return;
+            }
+            
+            if (target != null)
+            {
+                target.Deselect();
+                target = null;
+            }
+
+            var (hit, go) = Trace();
+            if (!hit)
+            {
+                return;
+            }
+
+            if (!(go.GetComponent(typeof(ITargetable)) is ITargetable newTarget))
+            {
+                return;
+            }
+            target = newTarget;
+            target.Select();
         }
 
         private void ActionToggled(Input.ToggledArgs args)
@@ -73,14 +142,50 @@ namespace Unity.Scripts.Mgr
             {
                 return;
             }
-
-            if (selection == Selection.Line)
-            {
-                StartDrawingLine();
-                return;
-            } 
             
-            PlaceProcessor(selection);
+            PlaceSelection(selection);
+        }
+
+        private void PlaceSelection(Selection s)
+        {
+            switch (s)
+            {
+                case Selection.Line:
+                    StartDrawingLine();
+                    return;
+                case Selection.Delete:
+                    DeleteTarget();
+                    return;
+                case Selection.AddOne:
+                    CreateProcessorNode(ProcessType.AddOne);
+                    return;
+                case Selection.SubOne:
+                    CreateProcessorNode(ProcessType.SubOne);
+                    return;
+            }
+            
+            throw new Exception("unhandled processor type " + s);
+        }
+
+        private void DeleteTarget()
+        {
+            if (target == null)
+            {
+                return;
+            }
+
+            var go = target.GameObject();
+            if (!(go.GetComponent(typeof(IDeletable)) is IDeletable deletable))
+            {
+                return;
+            }
+
+            if (!deletable.Delete())
+            {
+                return;
+            }
+            
+            target = null;
         }
 
         private void DrawCurrentLine()
@@ -100,12 +205,9 @@ namespace Unity.Scripts.Mgr
 
         private void StartDrawingLine()
         {
-            var (hit, go) = ScreenTrace();
-            if (!hit)
-            {
-                return;
-            }
-
+            var (hit, go) = TraceConnectable();
+            if (!hit) return;
+            
             var pos = go.transform.position;
 
             currentLine.enabled = false;
@@ -116,10 +218,27 @@ namespace Unity.Scripts.Mgr
             currentLine.enabled = true;
         }
 
-        private (bool Hit, GameObject Go) ScreenTrace()
+        private (bool Hit, GameObject Go) Trace()
         {
             var hit = Physics2D.Raycast(mInput.CursorPosition(), Vector2.zero);
             return hit.collider == null ? (false, null) : (true, hit.collider.gameObject);
+        }
+
+        private (bool hit, GameObject Go) TraceConnectable()
+        {
+            var (hit, traced) = Trace();
+            if (!hit)
+            {
+                return (false, null);
+            }
+
+            if (!(traced.GetComponent(typeof(IConnectable)) is IConnectable connectable))
+            {
+                return (false, null);
+            }
+
+            var go = connectable.GameObject();
+            return go == null ? (false, null) : (true, go);
         }
 
         private void StopDrawingLine()
@@ -129,14 +248,8 @@ namespace Unity.Scripts.Mgr
                 return;
             }
 
-            var (hit, go) = ScreenTrace();
-            if (!hit)
-            {
-                currentLine.positionCount = 0;
-                return;
-            }
-
-            if (go.Equals(currentLineStart))
+            var (hit, go) = TraceConnectable();
+            if (!hit || go.Equals(currentLineStart))
             {
                 currentLine.positionCount = 0;
                 return;
@@ -145,29 +258,20 @@ namespace Unity.Scripts.Mgr
             mGraph.CreateTransportConnector(new Graph.DrawConnector{
                 Prefab = connectorPrefab,
                 Start = OnGrid(currentLineStart.transform.position, LineZ),
-                Upstream = currentLineStart.GetComponentInParent(typeof(INode)) as INode,
+                Upstream = currentLineStart.GetComponent(typeof(INode)) as INode,
                 End = OnGrid(go.transform.position, LineZ),
-                Downstream = go.GetComponentInParent(typeof(INode)) as INode,
+                Downstream = go.GetComponent(typeof(INode)) as INode,
+                Z = LineZ
             });
 
             currentLine.positionCount = 0;
             currentLineStart = null;
         }
 
-        private void PlaceProcessor(Selection s)
+        private void CreateProcessorNode(ProcessType process)
         {
             var gridPos = OnGrid(mInput.CursorPosition(), PlaceZ);
-            switch (s)
-            {
-                case Selection.AddOne:
-                    mGraph.CreateProcessorNode(processorPrefab, ProcessType.AddOne, gridPos);
-                    return;
-                case Selection.SubOne:
-                    mGraph.CreateProcessorNode(processorPrefab, ProcessType.SubOne, gridPos);
-                    return;
-            }
-            
-            throw new Exception("unhandled processor type " + s);
+            mGraph.CreateProcessorNode(processorPrefab, process, gridPos);
         }
 
         private void Select(Selection s)

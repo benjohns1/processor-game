@@ -29,12 +29,13 @@ namespace Unity.Scripts.Mgr
             public Vector3 Start;
             public INode Downstream;
             public Vector3 End;
+            public float Z;
         }
 
         public void CreateTransportConnector(DrawConnector drawConnector)
         {
             // Display in game
-            var go = Instantiate(drawConnector.Prefab, Vector3.zero, Quaternion.identity);
+            var go = Instantiate(drawConnector.Prefab, new Vector3(0, 0, drawConnector.Z), Quaternion.identity);
             var monoTransporter = go.GetComponent<Transporter>();
             if (monoTransporter == null || !monoTransporter.Init(nodeGraph, drawConnector.Upstream, drawConnector.Start, drawConnector.Downstream, drawConnector.End))
             {

@@ -54,6 +54,9 @@ MonoBehaviour:
       allShapes: 1
       includeShapes: 
       excludeShapes: 
+    rate:
+      amount: 1
+      tickSpan: 1
   - processType: 1
     sprite: {fileID: 21300000, guid: 0f3ba1ed6373fec4bbd0490fb756f318, type: 3}
     spriteScale: {x: 0.2, y: 0.2}
@@ -61,6 +64,9 @@ MonoBehaviour:
       allShapes: 1
       includeShapes: 
       excludeShapes: 
+    rate:
+      amount: 1
+      tickSpan: 1
   processType: 0
   inputText: {fileID: 2960116911159422155}
   outputText: {fileID: 3974281207258307772}
@@ -69,7 +75,6 @@ MonoBehaviour:
   inactiveColor: {r: 1, g: 1, b: 1, a: 1}
   maxUpstream: 1
   maxDownstream: 1
-  rate: 1
 --- !u!1 &4432698372698489950
 GameObject:
   m_ObjectHideFlags: 0
@@ -81,6 +86,8 @@ GameObject:
   - component: {fileID: 327847838289679588}
   - component: {fileID: 2911269969066348154}
   - component: {fileID: 6837990410137343680}
+  - component: {fileID: 4973684660587832967}
+  - component: {fileID: 2555896303221534732}
   m_Layer: 0
   m_Name: Icon
   m_TagString: Untagged
@@ -178,6 +185,34 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 2.56, y: 2.56}
   m_EdgeRadius: 0
+--- !u!114 &4973684660587832967
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4432698372698489950}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86cbd3a28a8141bd8de09c55beca9b67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetObject: {fileID: 3562303550346004668}
+  targetColor: {r: 0.65556943, g: 0.18356179, b: 0.7075472, a: 1}
+  sprite: {fileID: 2911269969066348154}
+--- !u!114 &2555896303221534732
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4432698372698489950}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7949d652fda24f9994f60501c4f0f024, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  connectableObject: {fileID: 3562303550346004668}
 --- !u!1 &4648870637912525503
 GameObject:
   m_ObjectHideFlags: 0

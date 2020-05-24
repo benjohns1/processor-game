@@ -6,7 +6,7 @@ namespace SupplyChain
 {
     public interface ITransporter
     {
-        IConnector GetConnector();
+        bool Disconnect();
         event EventHandler<Transporter.PacketsMovedArgs> PacketsMoved;
     }
     
@@ -37,6 +37,9 @@ namespace SupplyChain
         private readonly Filter filter;
         private readonly List<MovingPacket> packets = new List<MovingPacket>();
         private readonly List<MovingPacket> removePackets = new List<MovingPacket>();
+        private readonly IBuffer input;
+        private readonly IBuffer output;
+        private readonly Ticker ticker;
 
         public Transporter(IConnector connector, Ticker ticker, int length, Rate rate, int speed)
         {
@@ -44,6 +47,7 @@ namespace SupplyChain
             this.length = length;
             this.rate = rate;
             this.speed = speed;
+            this.ticker = ticker;
             
             if (!(connector.Downstream is IProcessor p))
             {
@@ -51,15 +55,17 @@ namespace SupplyChain
             }
             filter = p.Filter;
             
-            if (!(connector.Upstream is IBuffer input) || !(connector.Downstream is IBuffer output))
+            if (!(connector.Upstream is IBuffer i) || !(connector.Downstream is IBuffer o))
             {
                 throw new Exception("transporter input and output must both be IBuffer");
             }
+            input = i;
+            output = o;
             
-            ticker.Tick += (sender, args) => Tick(args.Tick, output, input);
+            ticker.Tick += Tick;
         }
 
-        private void Tick(uint tick, IBuffer output, IBuffer input)
+        private void Tick(object sender, TickEventArgs e)
         {
             var initialCount = packets.Count;
             
@@ -89,7 +95,7 @@ namespace SupplyChain
             removePackets.Clear();
             
             // Add new items to transporter and remove from connected input
-            var amount = rate.GetAmount(tick);
+            var amount = rate.GetAmount(e.Tick);
             if (amount > 0)
             {
                 var ps = input.Remove(filter, amount);
@@ -112,7 +118,15 @@ namespace SupplyChain
             }
         }
 
-        public IConnector GetConnector() => connector;
+        public bool Disconnect()
+        {
+            if (!connector.Clear())
+            {
+                return false;
+            }
+            ticker.Tick -= Tick;
+            return true;
+        }
 
         private void OnPacketsMoved(PacketsMovedArgs e)
         {
