@@ -47,6 +47,6 @@ namespace SupplyChain
             remove => buffer.Updated -= value;
         }
         int IBuffer.Add(Packet packet) => buffer.Add(packet);
-        IEnumerable<Packet> IBuffer.Remove(Filter filter, int amount) => buffer.Remove(filter, amount);
+        ICollection<Packet> IBuffer.Remove(Filter filter, int amount) => buffer.Remove(filter, amount);
     }
 }

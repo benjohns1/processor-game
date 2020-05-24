@@ -8,7 +8,7 @@ namespace SupplyChain
     {
         event EventHandler<Buffer.UpdatedArgs> Updated;
         int Add(Packet packet);
-        IEnumerable<Packet> Remove(Filter filter, int amount);
+        ICollection<Packet> Remove(Filter filter, int amount);
     }
     
     [Serializable]
@@ -20,11 +20,11 @@ namespace SupplyChain
 
         public class UpdatedArgs : EventArgs
         {
-            public readonly Packet Buffer;
+            public readonly Packet Packet;
 
-            public UpdatedArgs(Packet buffer)
+            public UpdatedArgs(Packet packet)
             {
-                Buffer = buffer;
+                Packet = packet;
             }
         }
 
@@ -36,13 +36,14 @@ namespace SupplyChain
                 return 0;
             }
             
-            OnBufferUpdated(new UpdatedArgs(buffer[packet.Shape]));
+            OnBufferUpdated(buffer[packet.Shape]);
             return added;
         }
 
-        public IEnumerable<Packet> Remove(Filter filter, int amount)
+        public ICollection<Packet> Remove(Filter filter, int amount)
         {
             var keys = buffer.Keys.ToArray();
+            var removed = new List<Packet>();
             foreach (var shape in keys)
             {
                 if (!filter.MatchShape(shape)) continue;
@@ -50,10 +51,13 @@ namespace SupplyChain
                 var pRemove = buffer[shape].NewAmount(-amount);
                 var added = AddPacket(pRemove);
                 if (added == 0) continue;
-                yield return pRemove.NewAmount(-added);
+                removed.Add(pRemove.NewAmount(-added));
+                OnBufferUpdated(buffer[shape]);
                 amount += added;
                 if (amount == 0) break;
             }
+
+            return removed;
         }
 
         private int AddPacket(Packet packet)
@@ -83,9 +87,9 @@ namespace SupplyChain
             return amount;
         }
 
-        protected virtual void OnBufferUpdated(UpdatedArgs e)
+        protected virtual void OnBufferUpdated(Packet packet)
         {
-            Updated?.Invoke(this, e);
+            Updated?.Invoke(this, new UpdatedArgs(packet));
         }
 
         public override string ToString()

@@ -35,7 +35,7 @@ namespace Unity.Scripts
             sink = new SupplyChain.Sink(score, filter, rate.Get(), ticker, maxUpstream);
             sink.Updated += (sender, args) =>
             {
-                shapeCountText.text = $"{args.Buffer}";
+                shapeCountText.text = $"{args.Packet}";
             };
             sink.Activated += (sender, args) =>
             {

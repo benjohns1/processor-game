@@ -31,7 +31,7 @@ namespace Unity.Scripts
             source = new SupplyChain.Source(shape, rate.Get(), ticker, maxDownstream);
             source.Updated += (sender, args) =>
             {
-                shapeCountText.text = $"{args.Buffer}";
+                shapeCountText.text = $"{args.Packet}";
             };
         }
 

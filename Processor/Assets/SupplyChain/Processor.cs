@@ -82,7 +82,7 @@ namespace SupplyChain
         }
 
         int IBuffer.Add(Packet packet) => input.Add(packet);
-        public IEnumerable<Packet> Remove(Filter filter, int amount) => output.Remove(filter, amount);
+        public ICollection<Packet> Remove(Filter filter, int amount) => output.Remove(filter, amount);
         public Filter Filter => process.Filter;
         public Rate Rate => process.Rate;
 

@@ -63,11 +63,11 @@ namespace Unity.Scripts
             processor = new SupplyChain.Processor(p, ticker, maxUpstream, maxDownstream);
             processor.Updated += (sender, args) =>
             {
-                outputText.text = $"{args.Buffer}";
+                outputText.text = $"{args.Packet}";
             };
             processor.InputUpdated += (sender, args) =>
             {
-                inputText.text = $"{args.Buffer}";
+                inputText.text = $"{args.Packet}";
             };
             processor.Activated += (sender, args) =>
             {

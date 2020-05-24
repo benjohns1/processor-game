@@ -76,7 +76,7 @@ namespace SupplyChain
             remove => buffer.Updated -= value;
         }
         int IBuffer.Add(Packet packet) => buffer.Add(packet);
-        IEnumerable<Packet> IBuffer.Remove(Filter f, int amount) => buffer.Remove(f, amount);
+        ICollection<Packet> IBuffer.Remove(Filter f, int amount) => buffer.Remove(f, amount);
 
         protected virtual void OnPacketSunk(PacketSunkArgs e)
         {
