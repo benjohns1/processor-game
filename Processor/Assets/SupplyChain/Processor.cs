@@ -50,9 +50,9 @@ namespace SupplyChain
             }
         }
 
-        public override bool Disconnect()
+        public override bool Delete()
         {
-            if (!base.Disconnect())
+            if (!base.Delete())
             {
                 return false;
             }

@@ -25,7 +25,7 @@ namespace SupplyChain.Graph
             {
                 return false;
             }
-            if (!node.Disconnect())
+            if (!node.Delete())
             {
                 return false;
             }

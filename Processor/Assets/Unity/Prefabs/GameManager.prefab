@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 7434242809220210696}
   - component: {fileID: -6956541004994300112}
   - component: {fileID: 8691114464635430624}
+  - component: {fileID: 1477694481494555284}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -50,14 +51,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   processorPrefab: {fileID: 8562806392496734214, guid: fba0a2d2b0cc63a4ca8fcb57e9af121d,
     type: 3}
-  cam: {fileID: 0}
-  gridSize: 1
   connectorPrefab: {fileID: 2224996393721274231, guid: f1559985d91728e449a42e74b4f1d90c,
     type: 3}
   currentLine: {fileID: 0}
-  buttonAddOne: {fileID: 0}
-  buttonSubOne: {fileID: 0}
-  buttonLine: {fileID: 0}
+  buttons:
+  - selection: 0
+    button: {fileID: 0}
+  - selection: 1
+    button: {fileID: 0}
+  - selection: 2
+    button: {fileID: 0}
+  - selection: 3
+    button: {fileID: 0}
 --- !u!114 &8887860496529877163
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -122,3 +127,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc9bc53dae494a5aa6a9eb52dcae420c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cam: {fileID: 0}
+--- !u!114 &1477694481494555284
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2115779969402537580}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c418d31b9a448fd974142f920515adb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gridSize: 1

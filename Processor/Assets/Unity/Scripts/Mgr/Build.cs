@@ -7,11 +7,10 @@ using Unity.Scripts.Targetable;
 namespace Unity.Scripts.Mgr
 {
 
-    [RequireComponent(typeof(Graph), typeof(Input))]
+    [RequireComponent(typeof(Graph), typeof(Input), typeof(Grid))]
     public class Build : MonoBehaviour
     {
         [SerializeField] private Processor processorPrefab;
-        [SerializeField] private float gridSize = 1f;
         [SerializeField] private GameObject connectorPrefab;
         [SerializeField] private LineRenderer currentLine;
 
@@ -48,20 +47,19 @@ namespace Unity.Scripts.Mgr
         private GameObject currentLineStart;
         private Selection selection;
         private ITargetable target;
-        private float posRound;
         private const float LineZ = 1;
         private const float CurrentLineZ = -1;
         private const float PlaceZ = 0;
         
         private Graph mGraph;
         private Input mInput;
+        private Grid grid;
 
         private void Awake()
         {
             InitBuildMenu();
-            
-            posRound = 1 / gridSize;
 
+            grid = GetComponent<Grid>();
             mGraph = GetComponent<Graph>();
             mInput = GetComponent<Input>();
             mInput.Toggled += (sender, args) => ActionToggled(args);
@@ -85,17 +83,6 @@ namespace Unity.Scripts.Mgr
             {
                 btn.handler.SetGroup(group);
             }
-        }
-        
-
-        private float OnGrid(float x)
-        {
-            return Mathf.Round(x * posRound) / posRound;
-        }
-
-        private Vector3 OnGrid(Vector2 xy, float z = 0f)
-        {
-            return new Vector3(OnGrid(xy.x), OnGrid(xy.y), z);
         }
 
         private void Update()
@@ -162,9 +149,9 @@ namespace Unity.Scripts.Mgr
                 case Selection.SubOne:
                     CreateProcessorNode(ProcessType.SubOne);
                     return;
+                default:
+                    throw new Exception("unhandled processor type " + s);
             }
-            
-            throw new Exception("unhandled processor type " + s);
         }
 
         private void DeleteTarget()
@@ -212,7 +199,7 @@ namespace Unity.Scripts.Mgr
 
             currentLine.enabled = false;
             currentLine.positionCount = 2;
-            currentLine.SetPosition(0, OnGrid(pos, CurrentLineZ));
+            currentLine.SetPosition(0, grid.Pos(pos, CurrentLineZ));
             DrawCurrentLine();
             currentLineStart = go;
             currentLine.enabled = true;
@@ -257,9 +244,9 @@ namespace Unity.Scripts.Mgr
 
             mGraph.CreateTransportConnector(new Graph.DrawConnector{
                 Prefab = connectorPrefab,
-                Start = OnGrid(currentLineStart.transform.position, LineZ),
+                Start = grid.Pos(currentLineStart.transform.position, LineZ),
                 Upstream = currentLineStart.GetComponent(typeof(INode)) as INode,
-                End = OnGrid(go.transform.position, LineZ),
+                End = grid.Pos(go.transform.position, LineZ),
                 Downstream = go.GetComponent(typeof(INode)) as INode,
                 Z = LineZ
             });
@@ -270,7 +257,7 @@ namespace Unity.Scripts.Mgr
 
         private void CreateProcessorNode(ProcessType process)
         {
-            var gridPos = OnGrid(mInput.CursorPosition(), PlaceZ);
+            var gridPos = grid.Pos(mInput.CursorPosition(), PlaceZ);
             mGraph.CreateProcessorNode(processorPrefab, process, gridPos);
         }
 

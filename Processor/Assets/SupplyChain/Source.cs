@@ -11,6 +11,7 @@ namespace SupplyChain
         public Rate rate;
         private readonly Buffer buffer = new Buffer();
         private Node node;
+        public event EventHandler Deleted;
 
         public Source(Shape shape, Rate rate, Ticker ticker, int maxDownstream)
         {
@@ -40,7 +41,7 @@ namespace SupplyChain
         bool INode.AddDownstream(IConnector connector) => node.AddDownstream(connector);
         bool INode.RemoveUpstream(IConnector connector) => node.RemoveUpstream(connector);
         bool INode.RemoveDownstream(IConnector connector) => node.RemoveDownstream(connector);
-        public bool Disconnect() => node.Disconnect();
+        public bool Delete() => node.Delete();
 
         public event EventHandler<Buffer.UpdatedArgs> Updated
         {

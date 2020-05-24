@@ -3,8 +3,12 @@ using UnityEngine;
 
 namespace Unity.Scripts.Mgr
 {
+    [RequireComponent(typeof(Grid))]
     public class Graph : MonoBehaviour
     {
+        private readonly NodeGraph nodeGraph = new NodeGraph();
+        private Grid grid;
+        
         public static int DistanceToConnectorLength(float distance)
         {
             return Mathf.RoundToInt(distance * 1000f);
@@ -12,11 +16,17 @@ namespace Unity.Scripts.Mgr
         
         public void CreateProcessorNode(Processor processorPrefab, ProcessType process, Vector3 pos)
         {
+            if (!grid.Available(pos))
+            {
+                return;
+            }
+            
             // Display in game
             var processor = Instantiate(processorPrefab, pos, Quaternion.identity);
             processor.SetProcess(process);
+            // ReSharper disable once UseNegatedPatternMatching
             var mNode = processor.GetComponent(typeof(INode)) as INode;
-            if (mNode == null || !mNode.Init(nodeGraph))
+            if (mNode == null || !mNode.Init(nodeGraph) || !grid.Add(processor.transform.position, mNode.GetNode()))
             {
                 Destroy(processor);
             }
@@ -43,7 +53,10 @@ namespace Unity.Scripts.Mgr
             }
         }
         
-        private NodeGraph nodeGraph = new NodeGraph();
+        private void Awake()
+        {
+            grid = GetComponent<Grid>();
+        }
         
         private void Start()
         {

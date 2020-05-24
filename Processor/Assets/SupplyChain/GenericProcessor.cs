@@ -47,6 +47,12 @@ namespace SupplyChain
             add => Buffer.Updated += value;
             remove => Buffer.Updated -= value;
         }
+
+        public virtual event EventHandler Deleted
+        {
+            add => Node.Deleted += value;
+            remove =>Node.Deleted -= value;
+        }
         
         public virtual int Add(Packet packet) => Buffer.Add(packet);
 
@@ -62,7 +68,7 @@ namespace SupplyChain
             Deactivated?.Invoke(this, EventArgs.Empty);
         }
 
-        public virtual bool Disconnect()
+        public virtual bool Delete()
         {
             if (Activated != null)
             {
@@ -86,7 +92,7 @@ namespace SupplyChain
                 }
             }
             
-            return Node.Disconnect();
+            return Node.Delete();
         }
     }
 }

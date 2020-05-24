@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace SupplyChain.Graph
 {
@@ -13,7 +12,26 @@ namespace SupplyChain.Graph
         bool AddDownstream(IConnector connector);
         bool RemoveUpstream(IConnector connector);
         bool RemoveDownstream(IConnector connector);
-        bool Disconnect();
+        bool Delete();
+        event EventHandler Deleted;
+    }
+
+    public class NodeComparer : IEqualityComparer<INode>
+    {
+        public bool Equals(INode x, INode y)
+        {
+            if (x == null)
+            {
+                return y == null;
+            }
+
+            return y != null && x.Id.Equals(y.Id);
+        }
+
+        public int GetHashCode(INode obj)
+        {
+            return obj.Id.GetHashCode();
+        }
     }
     
     public class Node : INode
@@ -26,6 +44,7 @@ namespace SupplyChain.Graph
         private readonly List<IConnector> downstream = new List<IConnector>();
         private readonly int maxUpstream;
         private readonly int maxDownstream;
+        public event EventHandler Deleted;
 
         public Node(int maxUpstream, int maxDownstream)
         {
@@ -64,7 +83,7 @@ namespace SupplyChain.Graph
             return downstream.Remove(connector);
         }
 
-        public bool Disconnect()
+        public bool Delete()
         {
             for (var i = upstream.Count - 1; i >= 0; i--)
             {
@@ -90,6 +109,7 @@ namespace SupplyChain.Graph
                 throw new Exception($"unable to clear upstream {upstream} from {this}");
             }
 
+            Deleted?.Invoke(this, EventArgs.Empty);
             return true;
         }
 
