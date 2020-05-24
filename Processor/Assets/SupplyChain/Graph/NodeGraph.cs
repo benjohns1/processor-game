@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 namespace SupplyChain.Graph
 {
@@ -17,6 +16,21 @@ namespace SupplyChain.Graph
             }
             nodes.Add(node);
             
+            return true;
+        }
+
+        public bool RemoveNode(INode node)
+        {
+            if (node == null || !nodes.Contains(node))
+            {
+                return false;
+            }
+            if (!node.Disconnect())
+            {
+                return false;
+            }
+            
+            nodes.Remove(node);
             return true;
         }
 

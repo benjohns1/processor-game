@@ -40,6 +40,7 @@ namespace SupplyChain
         bool INode.AddDownstream(IConnector connector) => node.AddDownstream(connector);
         bool INode.RemoveUpstream(IConnector connector) => node.RemoveUpstream(connector);
         bool INode.RemoveDownstream(IConnector connector) => node.RemoveDownstream(connector);
+        public bool Disconnect() => node.Disconnect();
 
         public event EventHandler<Buffer.UpdatedArgs> Updated
         {

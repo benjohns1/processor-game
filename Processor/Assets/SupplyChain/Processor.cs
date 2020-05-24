@@ -1,40 +1,29 @@
 ﻿using System;
-using System.Collections.Generic;
 using SupplyChain.Graph;
 using SupplyChain.Processes;
 
 namespace SupplyChain
 {
-    public interface IProcessor : INode, IBuffer
-    {
-        Filter Filter { get; }
-        Rate Rate { get; }
-        event EventHandler Activated;
-        event EventHandler Deactivated;
-        event EventHandler<Buffer.UpdatedArgs> InputUpdated;
-    }
-    
     [Serializable]
-    public class Processor : IProcessor
+    public class Processor : GenericProcessor
     {
-        private Node node;
-        private readonly Buffer input = new Buffer();
-        private readonly Buffer output = new Buffer();
+        private readonly Buffer input;
+        private readonly Ticker ticker;
         private readonly IProcess process;
 
         private bool isActive;
-        public event EventHandler Activated;
-        public event EventHandler Deactivated;
 
-        public Processor(IProcess process, Ticker ticker, int maxUpstream, int maxDownstream)
+        public Processor(IProcess p, Ticker t, int maxUpstream, int maxDownstream) : base(new Node(maxUpstream, maxDownstream), p.Filter, p.Rate)
         {
-            this.process = process;
-            node = new Node(maxUpstream, maxDownstream);
-            ticker.Tick += (sender, args) => Tick(args.Tick);
+            input = new Buffer();
+            process = p;
+            ticker = t;
+            t.Tick += Tick;
         }
 
-        private void Tick(uint tick)
+        private void Tick(object sender, TickEventArgs args)
         {
+            var tick = args.Tick;
             var amount = Rate.GetAmount(tick);
             if (amount == 0)
             {
@@ -46,7 +35,7 @@ namespace SupplyChain
             foreach (var packet in process.Run(input.Remove(Filter, amount)))
             {
                 activated = true;
-                var added = output.Add(packet);
+                var added = Buffer.Add(packet);
                 if (added != packet.Amount) throw new Exception("error adding packet");
             }
 
@@ -61,39 +50,23 @@ namespace SupplyChain
             }
         }
 
-        Guid INode.Id => node.Id;
-        bool INode.IsEntry => node.IsEntry;
-        bool INode.IsFinal => node.IsFinal;
-        bool INode.AddUpstream(IConnector connector) => node.AddUpstream(connector);
-        bool INode.AddDownstream(IConnector connector) => node.AddDownstream(connector);
-        bool INode.RemoveUpstream(IConnector connector) => node.RemoveUpstream(connector);
-        bool INode.RemoveDownstream(IConnector connector) => node.RemoveDownstream(connector);
-
-        event EventHandler<Buffer.UpdatedArgs> IBuffer.Updated
+        public override bool Disconnect()
         {
-            add => output.Updated += value;
-            remove => output.Updated -= value;
+            if (!base.Disconnect())
+            {
+                return false;
+            }
+            
+            ticker.Tick -= Tick;
+            return true;
         }
-
-        public event EventHandler<Buffer.UpdatedArgs> InputUpdated
+        
+        public override event EventHandler<Buffer.UpdatedArgs> InputUpdated
         {
             add => input.Updated += value;
             remove => input.Updated -= value;
         }
-
-        int IBuffer.Add(Packet packet) => input.Add(packet);
-        public ICollection<Packet> Remove(Filter filter, int amount) => output.Remove(filter, amount);
-        public Filter Filter => process.Filter;
-        public Rate Rate => process.Rate;
-
-        protected virtual void OnActivated()
-        {
-            Activated?.Invoke(this, EventArgs.Empty);
-        }
         
-        protected virtual void OnDeactivated()
-        {
-            Deactivated?.Invoke(this, EventArgs.Empty);
-        }
+        public override int Add(Packet packet) => input.Add(packet);
     }
 }

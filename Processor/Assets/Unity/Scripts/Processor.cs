@@ -25,7 +25,7 @@ namespace Unity.Scripts
         public Rate rate;
     }
     
-    public class Processor : MonoBehaviour, INode
+    public class Processor : MonoBehaviour, INode, IDeletable
     {
         [SerializeField] private ProcessConfig[] processes;
 
@@ -40,6 +40,7 @@ namespace Unity.Scripts
          
         private IProcessor processor;
         private SupplyChain.Ticker ticker;
+        private NodeGraph graph;
 
         private void Awake()
         {
@@ -86,6 +87,7 @@ namespace Unity.Scripts
 
         public bool Init(NodeGraph g)
         {
+            graph = g;
             var cfg = GetProcessConfig(processType);
             icon.sprite = cfg.sprite;
             icon.transform.localScale = cfg.spriteScale;
@@ -104,8 +106,17 @@ namespace Unity.Scripts
             }
             CreateProcessor(p);
             
-            
-            return g.AddNode(processor);
+            return graph.AddNode(processor);
+        }
+
+        public bool Delete()
+        {
+            if (!graph.RemoveNode(processor))
+            {
+                return false;
+            }
+            Destroy(gameObject);
+            return true;
         }
     }
 }

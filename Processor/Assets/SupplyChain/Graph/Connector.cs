@@ -6,13 +6,16 @@ namespace SupplyChain.Graph
     {
         INode Upstream { get; }
         INode Downstream { get; }
-        bool Clear();
+        bool Delete();
+
+        event EventHandler Deleted;
     }
     
     public class Connector : IConnector
     {
         public INode Upstream { get; }
         public INode Downstream { get; }
+        public event EventHandler Deleted;
 
         public Connector(INode upstream, INode downstream)
         {
@@ -25,7 +28,7 @@ namespace SupplyChain.Graph
             return $"(u:{Upstream.Id} d:{Downstream.Id}";
         }
 
-        public bool Clear()
+        public bool Delete()
         {
             if (!Upstream.RemoveDownstream(this))
             {
@@ -34,6 +37,7 @@ namespace SupplyChain.Graph
 
             if (Downstream.RemoveUpstream(this))
             {
+                Deleted?.Invoke(this, EventArgs.Empty);
                 return true;
             }
             
@@ -45,5 +49,6 @@ namespace SupplyChain.Graph
 
             return false;
         }
+
     }
 }

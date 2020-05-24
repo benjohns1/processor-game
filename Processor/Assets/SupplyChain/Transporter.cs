@@ -8,6 +8,7 @@ namespace SupplyChain
     {
         bool Disconnect();
         event EventHandler<Transporter.PacketsMovedArgs> PacketsMoved;
+        event EventHandler Disconnected;
     }
     
     public class Transporter : ITransporter
@@ -29,7 +30,8 @@ namespace SupplyChain
         }
             
         public event EventHandler<PacketsMovedArgs> PacketsMoved;
-        
+        public event EventHandler Disconnected;
+
         private readonly IConnector connector;
         private readonly int length;
         private readonly Rate rate;
@@ -63,6 +65,7 @@ namespace SupplyChain
             output = o;
             
             ticker.Tick += Tick;
+            connector.Deleted += Deleted;
         }
 
         private void Tick(object sender, TickEventArgs e)
@@ -118,15 +121,20 @@ namespace SupplyChain
             }
         }
 
-        public bool Disconnect()
+        private void Deleted(object sender, EventArgs e)
         {
-            if (!connector.Clear())
+            if (PacketsMoved != null)
             {
-                return false;
+                foreach (var del in PacketsMoved.GetInvocationList())
+                {
+                    PacketsMoved -= del as EventHandler<PacketsMovedArgs>;
+                }
             }
             ticker.Tick -= Tick;
-            return true;
+            Disconnected?.Invoke(this, EventArgs.Empty);
         }
+
+        public bool Disconnect() => connector.Delete();
 
         private void OnPacketsMoved(PacketsMovedArgs e)
         {

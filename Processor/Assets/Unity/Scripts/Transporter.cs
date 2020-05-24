@@ -58,6 +58,7 @@ namespace Unity.Scripts
             velocity = step * ((float) speed / ticker.UpdatesPerTick);
             transporter = new SupplyChain.Transporter(connector, ticker, length, rate.Get(), speed);
             transporter.PacketsMoved += TransporterOnPacketsMoved;
+            transporter.Disconnected += TransporterOnDisconnected;
             
             // Set collider
             lineCollider.SetCollider(start, end, transform.position.z);
@@ -70,6 +71,11 @@ namespace Unity.Scripts
             lr.enabled = true;
 
             return true;
+        }
+
+        private void TransporterOnDisconnected(object sender, EventArgs e)
+        {
+            Destroy(gameObject);
         }
 
         private void TransporterOnPacketsMoved(object sender, SupplyChain.Transporter.PacketsMovedArgs e)
@@ -120,15 +126,6 @@ namespace Unity.Scripts
             }
         }
 
-        public bool Delete()
-        {
-            if (!transporter.Disconnect())
-            {
-                return false;
-            }
-            transporter.PacketsMoved -= TransporterOnPacketsMoved;
-            Destroy(gameObject);
-            return true;
-        }
+        public bool Delete() => transporter.Disconnect();
     }
 }

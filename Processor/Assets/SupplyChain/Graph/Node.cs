@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SupplyChain.Graph
 {
@@ -12,9 +13,10 @@ namespace SupplyChain.Graph
         bool AddDownstream(IConnector connector);
         bool RemoveUpstream(IConnector connector);
         bool RemoveDownstream(IConnector connector);
+        bool Disconnect();
     }
     
-    public class Node
+    public class Node : INode
     {
         public Guid Id { get; }
         public bool IsEntry => upstream.Count == 0;
@@ -60,6 +62,35 @@ namespace SupplyChain.Graph
         public bool RemoveDownstream(IConnector connector)
         {
             return downstream.Remove(connector);
+        }
+
+        public bool Disconnect()
+        {
+            for (var i = upstream.Count - 1; i >= 0; i--)
+            {
+                if (!upstream[i].Delete())
+                {
+                    throw new Exception($"unable to clear upstream {upstream[i]} from {this}");
+                }
+            }
+            if (upstream.Count > 0)
+            {
+                throw new Exception($"unable to clear upstream {upstream} from {this}");
+            }
+            
+            for (var i = downstream.Count - 1; i >= 0; i--)
+            {
+                if (!downstream[i].Delete())
+                {
+                    throw new Exception($"unable to clear downstream {downstream[i]} from {this}");
+                }
+            }
+            if (downstream.Count > 0)
+            {
+                throw new Exception($"unable to clear upstream {upstream} from {this}");
+            }
+
+            return true;
         }
 
         public override string ToString()

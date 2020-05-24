@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using SupplyChain.Graph;
 
 namespace SupplyChain
 {
     [Serializable]
-    public class Sink : IProcessor
+    public class Sink : GenericProcessor
     {
         public event EventHandler<PacketSunkArgs> PacketSunk;
 
@@ -14,22 +13,20 @@ namespace SupplyChain
             public Packet Packet;
         }
 
-        private readonly Buffer buffer = new Buffer();
-        private Node node;
+        private Ticker ticker;
 
         private bool isActive;
 
-        public Sink(Score score, Filter filter, Rate rate, Ticker ticker, int maxUpstream)
+        public Sink(Score score, Filter f, Rate r, Ticker t, int maxUpstream) : base(new Node(maxUpstream, 0), f, r)
         {
-            Filter = filter;
-            Rate = rate;
-            ticker.Tick += (sender, args) => Tick(args.Tick);
-            node = new Node(maxUpstream, 0);
+            ticker = t;
+            ticker.Tick += Tick;
             score.RegisterSink(this);
         }
 
-        private void Tick(uint tick)
+        private void Tick(object sender, TickEventArgs args)
         {
+            var tick = args.Tick;
             var amount = Rate.GetAmount(tick);
              if (amount == 0)
              {
@@ -40,7 +37,7 @@ namespace SupplyChain
              }
 
              var activated = false;
-             foreach (var packet in buffer.Remove(Filter, amount))
+             foreach (var packet in Buffer.Remove(Filter, amount))
              {
                  activated = true;
                  OnPacketSunk(new PacketSunkArgs
@@ -60,46 +57,22 @@ namespace SupplyChain
              }
         }
         
-        public override string ToString() => $"{base.ToString()}:{node}";
-
-        Guid INode.Id => node.Id;
-        bool INode.IsEntry => node.IsEntry;
-        bool INode.IsFinal => node.IsFinal;
-        bool INode.AddUpstream(IConnector connector) => node.AddUpstream(connector);
-        bool INode.AddDownstream(IConnector connector) => node.AddDownstream(connector);
-        bool INode.RemoveUpstream(IConnector connector) => node.RemoveUpstream(connector);
-        bool INode.RemoveDownstream(IConnector connector) => node.RemoveDownstream(connector);
-
-        public event EventHandler<Buffer.UpdatedArgs> Updated
-        {
-            add => buffer.Updated += value;
-            remove => buffer.Updated -= value;
-        }
-        int IBuffer.Add(Packet packet) => buffer.Add(packet);
-        ICollection<Packet> IBuffer.Remove(Filter f, int amount) => buffer.Remove(f, amount);
+        public override string ToString() => $"{base.ToString()}:{Node}";
 
         protected virtual void OnPacketSunk(PacketSunkArgs e)
         {
             PacketSunk?.Invoke(this, e);
         }
 
-        public Filter Filter { get; }
-        public Rate Rate { get; }
-        public event EventHandler Activated;
-        public event EventHandler Deactivated;
-        public event EventHandler<Buffer.UpdatedArgs> InputUpdated
+        public override bool Disconnect()
         {
-            add => buffer.Updated += value;
-            remove => buffer.Updated += value;
-        }
-
-        protected virtual void OnActivated()
-        {
-            Activated?.Invoke(this, EventArgs.Empty);
-        }
-        protected virtual void OnDeactivated()
-        {
-            Deactivated?.Invoke(this, EventArgs.Empty);
+            if (!base.Disconnect())
+            {
+                return false;
+            }
+            
+            ticker.Tick -= Tick;
+            return true;
         }
     }
 }
