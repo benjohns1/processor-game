@@ -1,7 +1,7 @@
 ﻿using SupplyChain;
 using SupplyChain.Graph;
 using UnityEngine;
-using Unity.Scripts.Mgr;
+using Buffer = Unity.Scripts.UI.Buffer;
 using Score = Unity.Scripts.Mgr.Score;
 using Ticker = Unity.Scripts.Mgr.Ticker;
 
@@ -9,9 +9,7 @@ namespace Unity.Scripts
 {
     public class Sink : MonoBehaviour, INode
     {
-        [SerializeField] private TextMesh shapeCountText;
-        [SerializeField] private SpriteRenderer shapeIcon;
-        [SerializeField] private Packet packetPrefab;
+        [SerializeField] private Buffer buffer;
         [SerializeField] private Shape shape;
         [SerializeField] private Rate rate = new Rate();
         [SerializeField] private int maxUpstream = 1;
@@ -23,11 +21,6 @@ namespace Unity.Scripts
 
         private void Awake()
         {
-            shapeCountText.text = "";
-            var ss = packetPrefab.GetSprite(shape);
-            shapeIcon.sprite = ss.sprite;
-            shapeIcon.transform.localScale = ss.scale * 2;
-            
             var ticker = FindObjectOfType<Ticker>().ticker;
             var score = FindObjectOfType<Score>().score;
 
@@ -35,7 +28,7 @@ namespace Unity.Scripts
             sink = new SupplyChain.Sink(score, filter, rate.Get(), ticker, maxUpstream);
             sink.Updated += (sender, args) =>
             {
-                shapeCountText.text = $"{args.Packet}";
+                buffer.Set(args.Packet.Amount, shape);
             };
             sink.Activated += (sender, args) =>
             {
@@ -47,6 +40,12 @@ namespace Unity.Scripts
             };
         }
 
+        private void Start()
+        {
+            buffer.Init(true, shape);
+
+        }
+
         public SupplyChain.Graph.INode GetNode()
         {
             return sink;
@@ -54,6 +53,11 @@ namespace Unity.Scripts
         public bool Init(NodeGraph g)
         {
             return g.AddNode(sink);
+        }
+        
+        public GameObject GameObject()
+        {
+            return gameObject;
         }
     }
 }

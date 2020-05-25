@@ -1,16 +1,14 @@
 ﻿using SupplyChain;
 using SupplyChain.Graph;
 using UnityEngine;
-using Unity.Scripts.Mgr;
+using Buffer = Unity.Scripts.UI.Buffer;
 using Ticker = Unity.Scripts.Mgr.Ticker;
 
 namespace Unity.Scripts
 {
     public class Source : MonoBehaviour, INode
     {
-        [SerializeField] private TextMesh shapeCountText;
-        [SerializeField] private SpriteRenderer shapeIcon;
-        [SerializeField] private Packet packetPrefab;
+        [SerializeField] private Buffer buffer;
         [SerializeField] private Shape shape;
         [SerializeField] private Rate rate = new Rate();
         [SerializeField] private int maxDownstream = 1;
@@ -22,17 +20,17 @@ namespace Unity.Scripts
         {
             var monoTicker = FindObjectOfType<Ticker>();
             var ticker = monoTicker.GetComponent<Ticker>().ticker;
-            
-            shapeCountText.text = "";
-            var ss = packetPrefab.GetSprite(shape);
-            shapeIcon.sprite = ss.sprite;
-            shapeIcon.transform.localScale = ss.scale * 2;
-            
             source = new SupplyChain.Source(shape, rate.Get(), ticker, maxDownstream);
             source.Updated += (sender, args) =>
             {
-                shapeCountText.text = $"{args.Packet}";
+                buffer.Set(args.Packet.Amount, shape);
             };
+        }
+
+        private void Start()
+        {
+            buffer.Init(true, shape);
+
         }
 
         public SupplyChain.Graph.INode GetNode()
@@ -42,6 +40,11 @@ namespace Unity.Scripts
         public bool Init(NodeGraph g)
         {
             return g.AddNode(source);
+        }
+        
+        public GameObject GameObject()
+        {
+            return gameObject;
         }
     }
 }

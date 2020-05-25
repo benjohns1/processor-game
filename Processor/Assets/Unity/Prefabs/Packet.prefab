@@ -97,13 +97,13 @@ MonoBehaviour:
   shapes:
   - shape: 0
     sprite: {fileID: 21300000, guid: d3da8e61e42d3bd4387e716cbcb67569, type: 3}
-    scale: {x: 0.2, y: 0.2}
+    scale: {x: 1, y: 1}
   - shape: 1
     sprite: {fileID: 21300000, guid: a502896023798af489c3e8947c32a0e6, type: 3}
-    scale: {x: 0.15, y: 0.15}
+    scale: {x: 0.75, y: 0.75}
   - shape: 2
     sprite: {fileID: 21300000, guid: cc345a374964eac4981659469ed660b9, type: 3}
-    scale: {x: 0.2, y: 0.2}
+    scale: {x: 1, y: 1}
   - shape: 3
     sprite: {fileID: 21300000, guid: 2a7642d1d94445647abc3e45e751260d, type: 3}
-    scale: {x: 0.2, y: 0.2}
+    scale: {x: 1, y: 1}

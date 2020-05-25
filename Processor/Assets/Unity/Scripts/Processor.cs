@@ -5,6 +5,7 @@ using SupplyChain.Graph;
 using SupplyChain.Processes;
 using UnityEngine;
 using Unity.Scripts.Mgr;
+using Buffer = Unity.Scripts.UI.Buffer;
 using Ticker = Unity.Scripts.Mgr.Ticker;
 
 namespace Unity.Scripts
@@ -30,13 +31,13 @@ namespace Unity.Scripts
         [SerializeField] private ProcessConfig[] processes;
 
         [SerializeField] private ProcessType processType;
-        [SerializeField] private TextMesh inputText;
-        [SerializeField] private TextMesh outputText;
         [SerializeField] private SpriteRenderer icon;
         [SerializeField] private Color activeColor;
         [SerializeField] private Color inactiveColor;
         [SerializeField] private int maxUpstream = 1;
         [SerializeField] private int maxDownstream = 1;
+        [SerializeField] private Buffer bufferIn;
+        [SerializeField] private Buffer bufferOut;
          
         private IProcessor processor;
         private SupplyChain.Ticker ticker;
@@ -44,8 +45,6 @@ namespace Unity.Scripts
 
         private void Awake()
         {
-            inputText.text = "";
-            outputText.text = "";
             ticker = FindObjectOfType<Ticker>().ticker;
         }
 
@@ -64,11 +63,11 @@ namespace Unity.Scripts
             processor = new SupplyChain.Processor(p, ticker, maxUpstream, maxDownstream);
             processor.Updated += (sender, args) =>
             {
-                outputText.text = $"{args.Packet}";
+                bufferOut.Set(args.Packet.Amount, args.Packet.Shape);
             };
             processor.InputUpdated += (sender, args) =>
             {
-                inputText.text = $"{args.Packet}";
+                bufferIn.Set(args.Packet.Amount, args.Packet.Shape);
             };
             processor.Activated += (sender, args) =>
             {
@@ -117,6 +116,11 @@ namespace Unity.Scripts
             }
             Destroy(gameObject);
             return true;
+        }
+
+        public GameObject GameObject()
+        {
+            return gameObject;
         }
     }
 }

@@ -147,6 +147,7 @@ MonoBehaviour:
     amount: 1
     tickSpan: 1
   speed: 500
+  packetSpriteSize: 0.01
 --- !u!1 &7464905759180994853
 GameObject:
   m_ObjectHideFlags: 0

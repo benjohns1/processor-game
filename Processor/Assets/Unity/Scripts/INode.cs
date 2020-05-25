@@ -1,4 +1,5 @@
 ﻿using SupplyChain.Graph;
+using UnityEngine;
 
 namespace Unity.Scripts
 {
@@ -6,5 +7,6 @@ namespace Unity.Scripts
     {
         SupplyChain.Graph.INode GetNode();
         bool Init(NodeGraph g);
+        GameObject GameObject();
     }
 }

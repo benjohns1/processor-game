@@ -15,6 +15,7 @@ namespace Unity.Scripts
         [SerializeField] private LineCollider lineCollider;
         [SerializeField] private Rate rate;
         [SerializeField] private int speed = 1000;
+        [SerializeField] private float packetSpriteSize = 0.2f;
 
         private ITransporter transporter;
         private SupplyChain.Ticker ticker;
@@ -28,6 +29,7 @@ namespace Unity.Scripts
         private Vector3 endPosition;
         private float sqrMagnitude;
         private Vector3 step;
+        private Quaternion rotation;
 
         private void Awake()
         {
@@ -69,6 +71,8 @@ namespace Unity.Scripts
             lr.SetPosition(0, start);
             lr.SetPosition(1, end);
             lr.enabled = true;
+            
+            rotation = Quaternion.FromToRotation(Vector2.up, end - start);
 
             return true;
         }
@@ -89,7 +93,9 @@ namespace Unity.Scripts
                 if (packets.Count <= i)
                 {
                     // Create new packets, if needed
-                    packets.Add(Instantiate(packetPrefab, transform));
+                    var initPacket = Instantiate(packetPrefab, transform);
+                    initPacket.transform.rotation = rotation;
+                    packets.Add(initPacket);
                 }
                     
                 packets[i].Init(newPacket, startPosition + newPacket.Location * step);

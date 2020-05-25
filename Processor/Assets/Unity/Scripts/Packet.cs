@@ -20,10 +20,12 @@ namespace Unity.Scripts
 
         private SpriteRenderer icon;
         public SupplyChain.Transporter.MovingPacket MovingPacket { get; private set; }
+        private Vector3 initialScale = Vector3.one;
 
         private void Awake()
         {
             icon = GetComponent<SpriteRenderer>();
+            initialScale = transform.localScale;
         }
 
         public void Init(SupplyChain.Transporter.MovingPacket mp, Vector3 pos)
@@ -32,7 +34,7 @@ namespace Unity.Scripts
             MovingPacket = mp;
             var ss = GetSprite(mp.Packet.Shape);
             icon.sprite = ss.sprite;
-            icon.transform.localScale = ss.scale;
+            icon.transform.localScale = initialScale * ss.scale;
         }
 
         public ShapeSprite GetSprite(Shape shape)

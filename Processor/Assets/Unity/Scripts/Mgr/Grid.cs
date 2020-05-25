@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SupplyChain.Graph;
 using UnityEngine;
+using Object = System.Object;
 
 namespace Unity.Scripts.Mgr
 {
@@ -39,7 +40,24 @@ namespace Unity.Scripts.Mgr
         
         private void Awake()
         {
-            posRound = 1 / gridSize;   
+            posRound = 1 / gridSize;
+        }
+
+        private void Start()
+        {
+            LoadInitialNodes();
+        }
+
+        private void LoadInitialNodes()
+        {
+            if (!(FindObjectsOfType(typeof(UnityEngine.Object)) is INode[] startingNodes))
+            {
+                return;
+            }
+            foreach (var mNode in startingNodes)
+            {
+                Add(mNode.GameObject().transform.position, mNode.GetNode());
+            }
         }
 
         private float OnGrid(float x)
