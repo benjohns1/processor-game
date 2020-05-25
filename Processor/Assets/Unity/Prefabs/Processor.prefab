@@ -136,7 +136,7 @@ MonoBehaviour:
   processes:
   - processType: 0
     sprite: {fileID: 21300000, guid: 19e5ba7d75c4f2e4e8d2151606339bf3, type: 3}
-    spriteScale: {x: 0.2, y: 0.2}
+    spriteScale: {x: 1, y: 1}
     inputFilter:
       allShapes: 1
       includeShapes: 
@@ -146,7 +146,7 @@ MonoBehaviour:
       tickSpan: 1
   - processType: 1
     sprite: {fileID: 21300000, guid: 0f3ba1ed6373fec4bbd0490fb756f318, type: 3}
-    spriteScale: {x: 0.2, y: 0.2}
+    spriteScale: {x: 1, y: 1}
     inputFilter:
       allShapes: 1
       includeShapes: 
@@ -191,7 +191,7 @@ Transform:
   m_GameObject: {fileID: 4432698372698489950}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -0.5}
-  m_LocalScale: {x: 0.2, y: 0.2, z: 1}
+  m_LocalScale: {x: 0.15, y: 0.15, z: 1}
   m_Children: []
   m_Father: {fileID: 5343808752293141487}
   m_RootOrder: 1
@@ -259,7 +259,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.008732796, y: -0.0000009536743}
+  m_Offset: {x: 0.0013571978, y: 0.03027153}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -270,7 +270,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 4.323991, y: 7.135894}
+  m_Size: {x: 5.6761675, y: 6.5102615}
   m_EdgeRadius: 0
 --- !u!114 &4973684660587832967
 MonoBehaviour:
@@ -370,7 +370,7 @@ PrefabInstance:
     - target: {fileID: 7198477011909638197, guid: 7e851a9407c66e04ca1b61762a4398e7,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.368
+      value: -0.34
       objectReference: {fileID: 0}
     - target: {fileID: 7198477011909638197, guid: 7e851a9407c66e04ca1b61762a4398e7,
         type: 3}
@@ -507,7 +507,7 @@ PrefabInstance:
     - target: {fileID: 7198477011909638197, guid: 7e851a9407c66e04ca1b61762a4398e7,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.368
+      value: 0.34
       objectReference: {fileID: 0}
     - target: {fileID: 7198477011909638197, guid: 7e851a9407c66e04ca1b61762a4398e7,
         type: 3}

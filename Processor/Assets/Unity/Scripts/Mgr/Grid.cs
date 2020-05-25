@@ -50,13 +50,13 @@ namespace Unity.Scripts.Mgr
 
         private void LoadInitialNodes()
         {
-            if (!(FindObjectsOfType(typeof(UnityEngine.Object)) is INode[] startingNodes))
+            var all = FindObjectsOfType<MonoBehaviour>();
+            foreach (var obj in all)
             {
-                return;
-            }
-            foreach (var mNode in startingNodes)
-            {
-                Add(mNode.GameObject().transform.position, mNode.GetNode());
+                if (obj is INode mNode)
+                {
+                    Add(mNode.GameObject().transform.position, mNode.GetNode());
+                }
             }
         }
 

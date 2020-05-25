@@ -89,7 +89,7 @@ namespace Unity.Scripts
             graph = g;
             var cfg = GetProcessConfig(processType);
             icon.sprite = cfg.sprite;
-            icon.transform.localScale = cfg.spriteScale;
+            icon.transform.localScale *= cfg.spriteScale;
             
             IProcess p;
             switch (processType)

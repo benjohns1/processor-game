@@ -57,15 +57,5 @@ namespace Unity.Scripts.Mgr
         {
             grid = GetComponent<Grid>();
         }
-        
-        private void Start()
-        {
-            var sources = FindObjectsOfType<Source>();
-            for (var i = sources.Length - 1; i >= 0; i--)
-            {
-                var node = sources[i].GetNode();
-                nodeGraph.AddNode(node);
-            }
-        }
     }
 }
