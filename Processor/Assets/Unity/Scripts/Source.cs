@@ -12,6 +12,9 @@ namespace Unity.Scripts
         [SerializeField] private Shape shape;
         [SerializeField] private Rate rate = new Rate();
         [SerializeField] private int maxDownstream = 1;
+        [SerializeField] private SpriteRenderer icon;
+        [SerializeField] private Color activeColor;
+        [SerializeField] private Color inactiveColor;
 
 
      
@@ -24,6 +27,14 @@ namespace Unity.Scripts
             source.Updated += (sender, args) =>
             {
                 buffer.Set(args.Packet.Amount, shape);
+            };
+            source.Activated += (sender, args) =>
+            {
+                icon.color = activeColor;
+            };
+            source.Deactivated += (sender, args) =>
+            {
+                icon.color = inactiveColor;
             };
         }
 

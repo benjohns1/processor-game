@@ -13,12 +13,14 @@ namespace Unity.Scripts.Mgr
         
         private readonly Dictionary<KeyCode, Action> toggle = new Dictionary<KeyCode, Action>
         {
-            {KeyCode.Mouse0, Action.Primary}
+            {KeyCode.Mouse0, Action.Primary},
+            {KeyCode.Escape, Action.Quit}
         };
 
         public enum Action
         {
             Primary,
+            Quit,
         }
 
         public enum State

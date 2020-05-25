@@ -26,7 +26,7 @@ RectTransform:
   m_GameObject: {fileID: 3162627845401539878}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.3, y: 0.34, z: 1}
+  m_LocalScale: {x: 0.34, y: 0.34, z: 1}
   m_Children: []
   m_Father: {fileID: 5343808752293141487}
   m_RootOrder: 0
@@ -259,7 +259,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.0013571978, y: 0.03027153}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -270,7 +270,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 5.6761675, y: 6.5102615}
+  m_Size: {x: 6.5, y: 6.5}
   m_EdgeRadius: 0
 --- !u!114 &4973684660587832967
 MonoBehaviour:
@@ -285,7 +285,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetObject: {fileID: 3562303550346004668}
-  targetColor: {r: 0.65556943, g: 0.18356179, b: 0.7075472, a: 1}
+  targetColor: {r: 0.7058824, g: 0.18431371, b: 0.29995802, a: 1}
   sprite: {fileID: 2911269969066348154}
 --- !u!114 &2555896303221534732
 MonoBehaviour:

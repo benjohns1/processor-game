@@ -16,6 +16,7 @@ namespace Unity.Scripts.Mgr
 
         public enum Selection
         {
+            None,
             Line,
             Delete,
             AddOne,
@@ -57,12 +58,12 @@ namespace Unity.Scripts.Mgr
 
         private void Awake()
         {
-            InitBuildMenu();
-
             grid = GetComponent<Grid>();
             mGraph = GetComponent<Graph>();
             mInput = GetComponent<Input>();
-            mInput.Toggled += (sender, args) => ActionToggled(args);
+            mInput.Toggled += ActionToggled;
+            InitBuildMenu();
+
         }
         
         private void InitBuildMenu()
@@ -118,8 +119,14 @@ namespace Unity.Scripts.Mgr
             target.Select();
         }
 
-        private void ActionToggled(Input.ToggledArgs args)
+        private void ActionToggled(object _, Input.ToggledArgs args)
         {
+            if (args.On(Input.Action.Quit))
+            {
+                Application.Quit();
+                return;
+            }
+            
             if (currentLine.positionCount != 0 && args.Off(Input.Action.Primary))
             {
                 StopDrawingLine();
@@ -149,6 +156,8 @@ namespace Unity.Scripts.Mgr
                 case Selection.SubOne:
                     CreateProcessorNode(ProcessType.SubOne);
                     return;
+                case Selection.None:
+                    break;
                 default:
                     throw new Exception("unhandled processor type " + s);
             }
